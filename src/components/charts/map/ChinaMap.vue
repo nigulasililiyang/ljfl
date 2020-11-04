@@ -232,7 +232,7 @@ export default {
           {
             type: "lines",
             coordinateSystem: "geo",
-            zlevel: 2,
+            zlevel: 1,
             effect: {
               show: true,
               period: 4,
