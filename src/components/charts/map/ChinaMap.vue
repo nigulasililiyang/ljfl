@@ -13,11 +13,11 @@ import echarts from "echarts";
 import $ from "jquery";
 import "echarts/lib/component/geo";
 var myChart = null;
-var apiPre = "/geoJson/areas_v2/bound/";
+var apiPre = "https://geo.datav.aliyun.com/areas_v2/bound/";
 var apiFullSuf = "_full.json";
 var apiSuf = ".json";
 import Axios from "axios";
-import {getGeoJson}from "@/api/map.js"
+import { getGeoJson } from "@/api/map.js";
 export default {
   props: {
     width: {
@@ -48,91 +48,85 @@ export default {
   },
   methods: {
     changeLevel(zhName, adcode) {
+      let _this=this;
       if (adcode == null) {
-        this.geoJson.features.forEach((element) => {
+        _this.geoJson.features.forEach((element) => {
           if (element.properties.name == zhName) {
-            this.showMap(element.properties);
+            _this.showMap(element.properties);
           }
         });
       } else {
-        Axios.get(apiPre + adcode + apiSuf).then((res) => {
-          let feature = res.data.features[0];
-          this.showMap(feature.properties);
-        });
+        var http = require("http");
+        var fs = require("fs");
+        http.get(apiPre + adcode + apiSuf, function (res) {
+          res.setEncoding("utf-8");
+          var datas = "";
+          res
+            .on("data", function (data) {
+              datas += data;
+            })
+            .on("end", function () {
+              let feature = JSON.parse(datas).features[0];
+                _this.showMap(feature.properties);
+            })});
       }
     },
     showMap(properties) {
       let _this = this;
-      if (properties.level == "city") {
-             getGeoJson(apiPre + properties.adcode + apiSuf).then(res=>{
-          console.log("apiPre + properties.adcode + apiSuf");
-        });
-        // var acroutes = [];
-        // _this.geoJson.features.forEach((ele) => {
-        //   if (ele.properties.adcode == properties.adcode) {
-        //     acroutes = ele.properties.acroutes;
-        //   }
-        // });
-        // const fromurl =
-        //   "./" +
-        //   acroutes.toString().replace(",", "/") +
-        //   "/" +
-        //   properties.adcode +
-        //   ".json";
-        // import(fromurl).then((res) => {
-        //   myChart = null;
-        //   _this.geoJson = res;
-        //   _this.level = properties.level;
-        //   _this.currentArea = properties.name;
-        //   _this.currentAdcode = properties.adcode;
-        //   echarts.registerMap(_this.currentArea, _this.geoJson);
-        //   myChart = echarts.init(_this.$refs.myEchart);
-        //   // window.onresize = myChart.resize;
-        //   myChart.setOption(_this.getOption(_this.currentArea));
-        //   this.$emit("changeLevel", properties);
-        // });
-      } else if (properties.level == "district") {
-        Axios.get(apiPre + properties.adcode + apiSuf).then((res) => {
-          if (res.status == 200) {
-            myChart = null;
-            _this.level = properties.level;
-            _this.currentArea = properties.name;
-            _this.currentAdcode = properties.adcode;
-            _this.geoJson = res.data;
-            echarts.registerMap(_this.currentArea, _this.geoJson);
-            myChart = echarts.init(_this.$refs.myEchart);
-            // window.onresize = myChart.resize;
-            myChart.setOption(_this.getOption(_this.currentArea));
-            this.$emit("changeLevel", properties);
-          }
+      if (properties.level == "district") {
+        var http = require("http");
+        var fs = require("fs");
+        http.get(apiPre + properties.adcode + apiSuf, function (res) {
+          res.setEncoding("utf-8");
+          var datas = "";
+          res
+            .on("data", function (data) {
+              datas += data;
+            })
+            .on("end", function () {
+              myChart = null;
+              _this.level = properties.level;
+              _this.currentArea = properties.name;
+              _this.currentAdcode = properties.adcode;
+              _this.geoJson = JSON.parse(datas);
+              echarts.registerMap(_this.currentArea, _this.geoJson);
+              myChart = echarts.init(_this.$refs.myEchart);
+              // window.onresize = myChart.resize;
+              myChart.setOption(_this.getOption(_this.currentArea));
+              _this.$emit("changeLevel", properties);
+            });
         });
       } else {
-        // Axios.get(apiPre + properties.adcode + apiFullSuf).then((res) => {
-        //   if (res.status == 200) {
-        //     myChart = null;
-        //     _this.level = properties.level;
-        //     _this.currentArea = properties.name;
-        //     _this.currentAdcode = properties.adcode;
-        //     _this.geoJson = res.data;
-        //     echarts.registerMap(_this.currentArea, _this.geoJson);
-        //     myChart = echarts.init(_this.$refs.myEchart);
-        //     // window.onresize = myChart.resize;
-        //     myChart.setOption(_this.getOption(_this.currentArea));
-        //     this.$emit("changeLevel", properties);
-        //     myChart.on("click", function (param) {
-        //       _this.changeLevel(param.name);
-        //     });
-        //   }
-        // });
-        console.log("apiPre + properties.adcode + apiSuf");
-         getGeoJson(apiPre + properties.adcode + apiFullSuf).then(res=>{
-          console.log("apiPre + properties.adcode + apiSuf");
+        var http = require("http");
+        var fs = require("fs");
+        http.get(apiPre + properties.adcode + apiFullSuf, function (res) {
+          res.setEncoding("utf-8");
+          var datas = "";
+          res
+            .on("data", function (data) {
+              datas += data;
+            })
+            .on("end", function () {
+              myChart = null;
+              _this.level = properties.level;
+              _this.currentArea = properties.name;
+              _this.currentAdcode = properties.adcode;
+              _this.geoJson = JSON.parse(datas);
+              echarts.registerMap(_this.currentArea, _this.geoJson);
+              myChart = echarts.init(_this.$refs.myEchart);
+              // window.onresize = myChart.resize;
+              myChart.setOption(_this.getOption(_this.currentArea));
+              _this.$emit("changeLevel", properties);
+              myChart.on("click", function (param) {
+                _this.changeLevel(param.name);
+              });
+            });
         });
       }
     },
     backToParent() {
       let acroutes = this.geoJson.features[0].properties.acroutes;
-      if (this.geoJson.features[0].properties.level == "district") {
+      if (this.level == "district") {
         this.changeLevel(null, acroutes[acroutes.length - 1]);
       } else {
         acroutes.forEach((ele, index) => {

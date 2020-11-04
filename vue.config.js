@@ -59,17 +59,6 @@ module.exports = {
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
-      },'/geoJson': {
-        'target': 'https://geo.datav.aliyun.com',
-        // 接口地址
-        'secure': true,
-        // false为http访问，true为https访问
-        'changeOrigin': true,
-        // 跨域访问设置，true代表跨域，开启代理
-        // 路径改写规则
-        'pathRewrite': {
-          '^/geoJson': ''
-        }
       }
     },
     disableHostCheck: true
