@@ -1,0 +1,20 @@
+const getters = {
+  sidebar: state => state.app.sidebar,
+  subMenu: state => state.app.subMenu,
+  size: state => state.app.size,
+  device: state => state.app.device,
+  visitedViews: state => state.tagsView.visitedViews,
+  cachedViews: state => state.tagsView.cachedViews,
+  token: state => state.user.token,
+  avatar: state => state.user.avatar,
+  name: state => state.user.name,
+  introduction: state => state.user.introduction,
+  roles: state => state.user.roles,
+  permissions: state => state.user.permissions,
+  permission_routes: state => state.permission.routes,
+  parentListMenu:state=>state.menu.parentListMenu,
+  picId:state=>state.maintain.picAttachmentId,
+  topbar: state => state.app.topbar,
+  nodeSelected: state => state.app.nodeSelected,
+}
+export default getters
