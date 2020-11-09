@@ -62,16 +62,7 @@
     <!--  底部  -->
     <div class="el-login-footer">
       <span
-        >Copyright ©
-        {{ recordnoform.recordTime ? recordnoform.recordTime : "" }}
-        <template v-if="recordnoform.recordUrl">
-          <a target="_blank" :href="recordnoform.recordUrl">{{
-            recordnoform.recordNo ? recordnoform.recordNo : ""
-          }}</a>
-        </template>
-        <template v-else>
-          {{ recordnoform.recordNo ? recordnoform.recordNo : "" }}
-        </template>
+        >Copyright ©      
       </span>
     </div>
   </div>
@@ -80,8 +71,6 @@
 <script>
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from "@/utils/jsencrypt";
-import { selectRecordInfoConfigByKeys } from "@/api/system/config";
-
 export default {
   name: "Login",
   data() {
@@ -125,14 +114,8 @@ export default {
   created() {
     // this.getCode();
     this.getCookie();
-    this.selectRecordInfoConfigByKeys();
   },
   methods: {
-    selectRecordInfoConfigByKeys() {
-      selectRecordInfoConfigByKeys().then((response) => {
-        this.recordnoform = response.data;
-      });
-    },
     getCookie() {
       const username = Cookies.get("username");
       const password = Cookies.get("password");

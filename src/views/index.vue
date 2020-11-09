@@ -26,7 +26,7 @@
               </div>
             </div>
             <div class="sub-title">各类指标得分情况:</div>
-            <Radar />
+            <Radar :areaTag="queryForm.areaTag"/>
           </div>
         </div>
       </el-col>
@@ -56,7 +56,7 @@
                   color: #00ff12;
                 "
               >
-                优
+                {{areaInfo.score_grade_name}}
               </div>
               <div style="text-align: center">
                 <p
@@ -68,7 +68,7 @@
                     margin: 0;
                   "
                 >
-                  4.9
+                  {{areaInfo.total_score}}
                 </p>
                 <p style="font-size: 18px; margin: 0">总体评分</p>
               </div>
@@ -77,7 +77,7 @@
                   12:56:12 星期三
                 </p>
                 <p style="font-size: 16px; line-height: 30px; margin: 0">
-                  分类建议：四分类
+                  分类建议：{{areaInfo.classify_name}}
                 </p>
                 <p style="font-size: 31px; margin: 0">浙江-杭州</p>
               </div>
@@ -108,6 +108,7 @@
 <script>
 import Radar from "@/components/charts/radar/index";
 import ChinaMap from "@/components/charts/map/ChinaMap.vue";
+import { listQuotaRates,listQuotaGroups,getAreaInfo,listQuestions,getAreaByName  } from "@/api/system/quotas";
 export default {
   name: "Index",
   components: { Radar,ChinaMap },
@@ -148,6 +149,24 @@ export default {
           icon: "e-learning",
         },
       ],
+      //区域基本信息
+      areaInfo:{
+        area_tag:""
+      },
+      //区域分组得分情况
+      quotaGroups:[],
+      //区域指标得分情况
+      quotaRates:[],
+      //问卷情况
+      questions:[],
+      //查询参数
+      queryForm:{
+        areaTag:""
+      },
+      //区域名称，只有当前区域名字
+      areaName:"",
+      //区域全称，省份-城市
+      areaFullName:"",
       rules: {
         field102: [
           {
@@ -157,6 +176,43 @@ export default {
           },
         ],
       },
+      //省会列表
+      capitalList:[
+        {province:"北京市",capital:"北京"},
+{province:"上海市",capital:"上海"},
+{province:"天津市",capital:"天津"},
+{province:"重庆市",capital:"重庆"},
+{province:"黑龙江省",capital:"哈尔滨"},
+{province:"吉林省",capital:"长春"},
+{province:"辽宁省",capital:"沈阳"},
+{province:"内蒙古",capital:"呼和浩特"},
+{province:"河北省",capital:"石家庄"},
+{province:"新疆",capital:"乌鲁木齐"},
+{province:"甘肃省",capital:"兰州"},
+{province:"青海省",capital:"西宁"},
+{province:"陕西省",capital:"西安"},
+{province:"宁夏",capital:"银川"},
+{province:"河南省",capital:"郑州"},
+{province:"山东省",capital:"济南"},
+{province:"山西省",capital:"太原"},
+{province:"安徽省",capital:"合肥"},
+{province:"湖北省",capital:"武汉"},
+{province:"湖南省",capital:"长沙"},
+{province:"江苏省",capital:"南京"},
+{province:"四川省",capital:"成都"},
+{province:"贵州省",capital:"贵阳"},
+{province:"云南省",capital:"昆明"},
+{province:"广西省",capital:"南宁"},
+{province:"西藏",capital:"拉萨"},
+{province:"浙江省",capital:"杭州"},
+{province:"江西省",capital:"南昌"},
+{province:"广东省",capital:"广州"},
+{province:"福建省",capital:"福州"},
+{province:"台湾省",capital:"台北"},
+{province:"海南省",capital:"海口"},
+{province:"香港",capital:"香港"},
+{province:"澳门",capital:"澳门"}
+      ]
     };
   },
   methods: {
@@ -166,11 +222,130 @@ export default {
         // TODO 提交表单
       });
     },
+    /**
+     * 根据标签获取问题
+     */
+    findQuestionByTag(questionTag){
+      let question = null;
+      this.questions.forEach(element=>{
+        if(element.quota_tag == questionTag){
+          question = element;
+        }
+      });
+      return question;
+    },
+    /**
+     * 根据标签获取指标详情
+     */
+    findQuotaRateByTag(quotaRateTag){
+      let quotaRate = null;
+      this.quotaRates.forEach(element=>{
+        if(element.quota_rate_tag == quotaRateTag){
+          quotaRate = element;
+        }
+      });
+      return quotaRate;
+    },
+    /**
+     * 获取省会城市
+     */
+    findProvinceCapital(province){
+      let provinceCapital = null;
+        this.capitalList.forEach(element=>{
+             if(element.province == province){
+               provinceCapital = element;
+             }
+           })
+        return provinceCapital;
+    },
+    //获取区域的详细信息
+    getAreaDetail(){
+        //获取区域基本信息
+        // getAreaInfo(this.queryForm).then(response => {
+        //     if(response.code == 200){
+        //       this.areaInfo = response.areaInfo;
+        //     }
+        //   });
+
+        //获取分组得分信息
+        listQuotaGroups(this.queryForm).then(response => {
+            if(response.code == 200){
+              this.quotaGroups = response.quotaGroups;
+            }
+          });   
+        
+        //获取指标得分详情 
+        listQuotaRates(this.queryForm).then(response => {
+            if(response.code == 200){
+               this.quotaRates = response.quotaRates;
+            }
+          });    
+
+        //获取问卷详情     
+        listQuestions(this.queryForm).then(response => {
+          this.realtimeData = []
+            if(response.code == 200){
+              this.questions = response.questions;
+              let recoveryGarbage = this.findQuestionByTag('recovery_recovered');
+              let recovery = {
+                title:"可回收垃圾",
+                value:recoveryGarbage.quota_value,
+                icon: "recyclable-garbage.png"
+              };
+              this.realtimeData.push(recovery);
+              let kitchenGarbage = this.findQuestionByTag('real_kitchen_waste_deal');
+              let kitchen = {
+                title:"厨余垃圾",
+                value:kitchenGarbage.quota_value,
+                icon: "kitchen-garbage.png"
+              };
+              this.realtimeData.push(kitchen);
+              let harmfulGarbage = this.findQuestionByTag('real_harmful_waste_deal');
+              let harmful = {
+                title:"有害垃圾",
+                value:harmfulGarbage.quota_value,
+                icon: "harmful-garbage.png"
+              };
+              this.realtimeData.push(harmful);
+             }
+          }); 
+    },
     resetForm() {
       this.$refs["elForm"].resetFields();
     },
     changeLevel(val){
        sessionStorage.setItem('properties',JSON.stringify(val) )
+       //只有两次点击的地区名称不一致时才需要重新加载
+       let curAreaName = val.name;
+        if(val.level == "province"){
+           //如果是省份，默认获取该省的省会城市
+           let element = this.findProvinceCapital(val.name);
+           if(element != null){
+             curAreaName = element.capital;
+             this.areaFullName = val.name + "-" + curAreaName;
+           }
+        }else if(val.level == "city"){
+           console.log(val);
+        }else{
+          //除了省会和地级市外，其它地区不予处理
+          return;
+        }
+       if(this.areaName != curAreaName){
+         this.areaName = curAreaName;
+          let params = {
+            areaName:curAreaName
+          }
+         getAreaByName(params).then(response=>{
+            if(response.code == 200){
+              this.areaInfo = response.areaInfo;
+              this.queryForm.areaTag = this.areaInfo.area_tag;
+              this.getAreaDetail();
+            }
+         });
+
+          console.log(this.areaInfo);
+       }
+
     }
   },
 };
