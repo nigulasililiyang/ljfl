@@ -4,13 +4,12 @@
     </el-page-header>
     <div>
       <el-row type="flex" justify="center">
-        <el-col :span="16">
+        <el-col :span="24">
           <el-form
             ref="elForm"
             :model="formData"
             :rules="rules"
             size="small"
-            label-width="100px"
             label-position="top"
           >
             <el-form-item>
@@ -18,6 +17,7 @@
                 :indeterminate="isIndeterminate"
                 v-model="checkAll"
                 @change="handleCheckAllChange"
+                :disabled="level!='district'"
                 >全选</el-checkbox
               >
               <div style="margin: 15px 0"></div>
@@ -36,366 +36,402 @@
               </el-checkbox-group>
             </el-form-item>
             <div v-if="checkedModules.includes(1)">
-              <el-form-item label="已实现分类小区数量（个）" prop="field111">
-                <el-input
-                  v-model="formData.field111"
-                  placeholder="请输入已实现分类小区数量（个）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="所有分类小区数量（个）" prop="field113">
-                <el-input
-                  v-model="formData.field113"
-                  placeholder="请输入所有分类小区数量（个）"
-                  clearable
-                  :style="{ width: '100%' }"
+              <div class="group-title">分类收集</div>
+              <div class="group-content">
+                <el-form-item label="已实现分类小区数量（个）" prop="field111">
+                  <el-input
+                    v-model="formData.field111"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="所有分类小区数量（个）" prop="field113">
+                  <el-input
+                    v-model="formData.field113"
+                    placeholder="请输入"
+                    clearable
+
+                  >
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="分类示范小区总数量（个）" prop="field114">
+                  <el-input
+                    v-model="formData.field114"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item
+                  label="分类示范小区中已实现分类的小区数量（个）"
+                  prop="field115"
                 >
-                </el-input>
-              </el-form-item>
-              <el-form-item label="分类示范小区总数量（个）" prop="field114">
-                <el-input
-                  v-model="formData.field114"
-                  placeholder="请输入分类示范小区总数量（个）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item
-                label="分类示范小区中已实现分类的小区数量（个）"
-                prop="field115"
-              >
-                <el-input
-                  v-model="formData.field115"
-                  placeholder="请输入分类示范小区中已实现分类的小区数量（个）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item
-                label="实行分类运输的小区数量（个）"
-                prop="field116"
-              >
-                <el-input
-                  v-model="formData.field116"
-                  placeholder="请输入实行分类运输的小区数量（个）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
+                  <el-input
+                    v-model="formData.field115"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item
+                  label="实行分类运输的小区数量（个）"
+                  prop="field116"
+                >
+                  <el-input
+                    v-model="formData.field116"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+              </div>
             </div>
 
             <div v-if="checkedModules.includes(2)">
-              <el-form-item
-                label="实行分类运输的小区数量（个）"
-                prop="field117"
-              >
-                <el-input
-                  v-model="formData.field117"
-                  placeholder="请输入实行分类运输的小区数量（个）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="所有小区数量（个）" prop="field118">
-                <el-input
-                  v-model="formData.field118"
-                  placeholder="请输入所有小区数量（个）"
-                  clearable
-                  :style="{ width: '100%' }"
+              <div class="group-title">分类运输</div>
+              <div class="group-content">
+                <el-form-item
+                  label="实行分类运输的小区数量（个）"
+                  prop="field117"
                 >
-                </el-input>
-              </el-form-item>
+                  <el-input
+                    v-model="formData.field117"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="所有小区数量（个）" prop="field118">
+                  <el-input
+                    v-model="formData.field118"
+                    placeholder="请输入"
+                    clearable
+
+                  >
+                  </el-input>
+                </el-form-item>
+              </div>
             </div>
 
             <div v-if="checkedModules.includes(3)">
-              <el-form-item label="生活垃圾焚烧处理量（t）" prop="field119">
-                <el-input
-                  v-model="formData.field119"
-                  placeholder="请输入生活垃圾焚烧处理量（t）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="生活垃圾填埋处理量（t）" prop="field120">
-                <el-input
-                  v-model="formData.field120"
-                  placeholder="请输入生活垃圾填埋处理量（t）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="生活垃圾清运量（t）" prop="field122">
-                <el-input
-                  v-model="formData.field122"
-                  placeholder="请输入生活垃圾清运量（t）"
-                  clearable
-                  :style="{ width: '100%' }"
-                >
-                </el-input>
-              </el-form-item>
-              <el-form-item label="厨余垃圾处理能力（t/d）" prop="field123">
-                <el-input
-                  v-model="formData.field123"
-                  placeholder="请输入厨余垃圾处理能力（t/d）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="有害垃圾处理能力（t/d）" prop="field124">
-                <el-input
-                  v-model="formData.field124"
-                  placeholder="请输入有害垃圾处理能力（t/d）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="实际厨余垃圾处理量（t/d）" prop="field125">
-                <el-input
-                  v-model="formData.field125"
-                  placeholder="请输入实际厨余垃圾处理量（t/d）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="实际有害垃圾处理量（t/d）" prop="field126">
-                <el-input
-                  v-model="formData.field126"
-                  placeholder="请输入实际有害垃圾处理量（t/d）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
+              <div class="group-title">分类处理</div>
+              <div class="group-content">
+                <el-form-item label="生活垃圾焚烧处理量（t）" prop="field119">
+                  <el-input
+                    v-model="formData.field119"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="生活垃圾填埋处理量（t）" prop="field120">
+                  <el-input
+                    v-model="formData.field120"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="生活垃圾清运量（t）" prop="field122">
+                  <el-input
+                    v-model="formData.field122"
+                    placeholder="请输入"
+                    clearable
+
+                  >
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="厨余垃圾处理能力（t/d）" prop="field123">
+                  <el-input
+                    v-model="formData.field123"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="有害垃圾处理能力（t/d）" prop="field124">
+                  <el-input
+                    v-model="formData.field124"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="实际厨余垃圾处理量（t/d）" prop="field125">
+                  <el-input
+                    v-model="formData.field125"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="实际有害垃圾处理量（t/d）" prop="field126">
+                  <el-input
+                    v-model="formData.field126"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+              </div>
             </div>
 
             <div v-if="checkedModules.includes(4)">
-              <el-form-item label="回收的生活垃圾量（t/d）" prop="field127">
-                <el-input
-                  v-model="formData.field127"
-                  placeholder="请输入回收的生活垃圾量（t/d）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="每天回收的可回收物量（t/d）" prop="field128">
-                <el-input
-                  v-model="formData.field128"
-                  placeholder="请输入每天回收的可回收物量（t/d）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
+              <div class="group-title">分类回收</div>
+              <div class="group-content">
+                <el-form-item label="回收的生活垃圾量（t/d）" prop="field127">
+                  <el-input
+                    v-model="formData.field127"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item
+                  label="每天回收的可回收物量（t/d）"
+                  prop="field128"
+                >
+                  <el-input
+                    v-model="formData.field128"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+              </div>
             </div>
 
             <div v-if="checkedModules.includes(5)">
-              <el-form-item label="支持垃圾分类人数（人）" prop="field129">
-                <el-input
-                  v-model="formData.field129"
-                  placeholder="请输入支持垃圾分类人数（人）"
-                  clearable
-                  :style="{ width: '100%' }"
+              <div class="group-title">社会因素</div>
+              <div class="group-content">
+                <el-form-item label="支持垃圾分类人数（人）" prop="field129">
+                  <el-input
+                    v-model="formData.field129"
+                    placeholder="请输入"
+                    clearable
+
+                  >
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="调查区域居民总人数（人）" prop="field130">
+                  <el-input
+                    v-model="formData.field130"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="知晓垃圾分类人数（人）" prop="field131">
+                  <el-input
+                    v-model="formData.field131"
+                    placeholder="请输入"
+                    clearable
+
+                  >
+                  </el-input>
+                </el-form-item>
+                <el-form-item
+                  label="常住人口中具有大专以上学历（包括在校生）的人数"
+                  prop="field132"
                 >
-                </el-input>
-              </el-form-item>
-              <el-form-item label="调查区域居民总人数（人）" prop="field130">
-                <el-input
-                  v-model="formData.field130"
-                  placeholder="请输入调查区域居民总人数（人）"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="知晓垃圾分类人数（人）" prop="field131">
-                <el-input
-                  v-model="formData.field131"
-                  placeholder="请输入知晓垃圾分类人数（人）"
-                  clearable
-                  :style="{ width: '100%' }"
-                >
-                </el-input>
-              </el-form-item>
-              <el-form-item
-                label="常住人口中具有大专以上学历（包括在校生）的人数"
-                prop="field132"
-              >
-                <el-input
-                  v-model="formData.field132"
-                  placeholder="请输入常住人口中具有大专以上学历（包括在校生）的人数"
-                  clearable
-                  :style="{ width: '100%' }"
-                ></el-input>
-              </el-form-item>
+                  <el-input
+                    v-model="formData.field132"
+                    placeholder="请输入"
+                    clearable
+
+                  ></el-input>
+                </el-form-item>
+              </div>
             </div>
 
             <div v-if="checkedModules.includes(6)">
-              <el-form-item
-                label="是否将垃圾分类编入教材或知识读本"
-                prop="field134"
-              >
-                <el-radio-group v-model="formData.field134" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="是否开展宣传教育活动" prop="field135">
-                <el-radio-group v-model="formData.field135" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="是否纳入教育体系" prop="field136">
-                <el-radio-group v-model="formData.field136" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
+              <div class="group-title">宣传教育</div>
+              <div class="group-content">
+                <el-form-item
+                  label="是否将垃圾分类编入教材或知识读本"
+                  prop="field134"
+                >
+                  <el-radio-group v-model="formData.field134" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="是否开展宣传教育活动" prop="field135">
+                  <el-radio-group v-model="formData.field135" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="是否纳入教育体系" prop="field136">
+                  <el-radio-group v-model="formData.field136" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+              </div>
             </div>
 
             <div v-if="checkedModules.includes(7)">
-              <el-form-item label="环卫投资（万元）" prop="field137">
-                <el-input
-                  v-model="formData.field137"
-                  placeholder="请输入环卫投资（万元）"
-                  clearable
-                  :style="{ width: '100%' }"
-                >
-                </el-input>
-              </el-form-item>
-              <el-form-item label="人均GDP（万元）" prop="field138">
-                <el-input
-                  v-model="formData.field138"
-                  placeholder="请输入人均GDP（万元）"
-                  clearable
-                  :style="{ width: '100%' }"
-                >
-                </el-input>
-              </el-form-item>
-              <el-form-item label="城市GDP（万元）" prop="field139">
-                <el-input
-                  v-model="formData.field139"
-                  placeholder="请输入城市GDP（万元）"
-                  clearable
-                  :style="{ width: '100%' }"
-                >
-                </el-input>
-              </el-form-item>
+              <div class="group-title">经济因素</div>
+              <div class="group-content">
+                <el-form-item label="环卫投资（万元）" prop="field137">
+                  <el-input
+                    v-model="formData.field137"
+                    placeholder="请输入"
+                    clearable
+
+                  >
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="人均GDP（万元）" prop="field138">
+                  <el-input
+                    v-model="formData.field138"
+                    placeholder="请输入"
+                    clearable
+
+                  >
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="城市GDP（万元）" prop="field139">
+                  <el-input
+                    v-model="formData.field139"
+                    placeholder="请输入"
+                    clearable
+
+                  >
+                  </el-input>
+                </el-form-item>
+              </div>
             </div>
 
             <div v-if="checkedModules.includes(8)">
-              <el-form-item
-                label="有无垃圾分类相关管理机构、组织或联席会议制度"
-                prop="field140"
-              >
-                <el-radio-group v-model="formData.field140" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item
-                label="有无垃圾分类工作协调机制、责任落实"
-                prop="field141"
-              >
-                <el-radio-group v-model="formData.field141" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="有无垃圾分类培训业务" prop="field142">
-                <el-radio-group v-model="formData.field142" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="有无具体的垃圾分类工作办法" prop="field143">
-                <el-radio-group v-model="formData.field143" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="有无垃圾分类监督机制" prop="field144">
-                <el-radio-group v-model="formData.field144" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="有无垃圾分类反馈机制" prop="field145">
-                <el-radio-group v-model="formData.field145" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="有无2017年后更新的法律法规" prop="field146">
-                <el-radio-group v-model="formData.field146" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="有无2017年后更新的法律法规" prop="field147">
-                <el-radio-group v-model="formData.field147" size="medium">
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
+              <div class="group-title">工作基础</div>
+              <div class="group-content">
+                <el-form-item
+                  label="有无垃圾分类相关管理机构、组织或联席会议制度"
+                  prop="field140"
+                >
+                  <el-radio-group v-model="formData.field140" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item
+                  label="有无垃圾分类工作协调机制、责任落实"
+                  prop="field141"
+                >
+                  <el-radio-group v-model="formData.field141" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="有无垃圾分类培训业务" prop="field142">
+                  <el-radio-group v-model="formData.field142" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item
+                  label="有无具体的垃圾分类工作办法"
+                  prop="field143"
+                >
+                  <el-radio-group v-model="formData.field143" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="有无垃圾分类监督机制" prop="field144">
+                  <el-radio-group v-model="formData.field144" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="有无垃圾分类反馈机制" prop="field145">
+                  <el-radio-group v-model="formData.field145" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item
+                  label="有无2017年后更新的法律法规"
+                  prop="field146"
+                >
+                  <el-radio-group v-model="formData.field146" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item
+                  label="有无2017年后更新的法律法规"
+                  prop="field147"
+                >
+                  <el-radio-group v-model="formData.field147" size="medium">
+                    <el-radio
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
+                      :label="item.value"
+                      :disabled="item.disabled"
+                      >{{ item.label }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+              </div>
             </div>
             <el-form-item size="large">
               <el-row type="flex" justify="center">
-              <el-button type="primary" @click="submitForm">提交</el-button>
-              <el-button @click="resetForm">重置</el-button>
+                <el-button type="primary" @click="submitForm">提交</el-button>
+                <el-button @click="resetForm">重置</el-button>
               </el-row>
             </el-form-item>
           </el-form>
@@ -406,9 +442,22 @@
 </template>
 <script>
 export default {
+    computed: {
+    level() {
+      return this.$store.state.chinaMap.level;
+    },
+    currentArea() {
+      return this.$store.state.chinaMap.currentArea;
+    },
+    currentAdcode() {
+      return this.$store.state.chinaMap.currentAdcode;
+    },
+    content() {
+        return this.$store.state.chinaMap.currentArea+ "(" + this.$store.state.chinaMap.level + ")";
+    },
+  },
   data() {
     return {
-      properties: undefined,
       isIndeterminate: true,
       checkAll: false,
       checkedModules: [],
@@ -711,8 +760,7 @@ export default {
     };
   },
   created() {
-    this.properties = JSON.parse(sessionStorage.getItem("properties"));
-    if (this.properties.level != "district") {
+    if (this.level != "district") {
       this.checkedModules = [1, 2, 3, 4, 5, 6, 7, 8];
     } else {
       this.checkedModules = [];
@@ -742,12 +790,21 @@ export default {
       this.$refs["elForm"].resetFields();
     },
   },
-  computed: {
-    content() {
-      if (this.properties) {
-        return this.properties.name + "(" + this.properties.level + ")";
-      }
-    },
-  },
 };
 </script>
+<style scoped>
+.group-title {
+  background: #499dff;
+  width: 100%;
+  height: 36px;
+  line-height: 36px;
+  padding: 0 10px;
+}
+.group-content {
+  padding: 20px;
+  display: flex;
+}
+.el-form-item{
+  margin-right: 28px;
+}
+</style>

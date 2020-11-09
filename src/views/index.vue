@@ -1,7 +1,11 @@
 <template>
   <div>
     <el-row class="row">
-      <el-col :span="8" class="inline x-flex-center">
+      <el-col
+        :span="8"
+        class="inline x-flex-center"
+        v-show="level == 'district'"
+      >
         <div class="item">
           <div class="inline x-flex-center y-flex-center">
             <div class="left-right-title">实时数据</div>
@@ -30,12 +34,16 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="8" class="inline x-flex-center">
+      <el-col :span="level == 'district'?8:24" class="inline x-flex-center">
         <div class="center">
-           <china-map width="625px" height="603px" @changeLevel="changeLevel"/>
+          <china-map />
         </div>
       </el-col>
-      <el-col :span="8" class="inline x-flex-center">
+      <el-col
+        :span="8"
+        class="inline x-flex-center"
+        v-show="level == 'district'"
+      >
         <div class="item">
           <div class="inline x-flex-center y-flex-center">
             <div class="right-another"></div>
@@ -88,7 +96,11 @@
         </div>
       </el-col>
     </el-row>
-    <div class="inline y-flex-center" style="justify-content: space-around">
+    <div
+      class="inline y-flex-center"
+      style="justify-content: space-around"
+      v-show="level == 'district'"
+    >
       <div class="bottom-left-bg"></div>
       <div
         class="bottom-item-bg"
@@ -110,7 +122,18 @@ import Radar from "@/components/charts/radar/index";
 import ChinaMap from "@/components/charts/map/ChinaMap.vue";
 export default {
   name: "Index",
-  components: { Radar,ChinaMap },
+  components: { Radar, ChinaMap },
+  computed: {
+    level() {
+      return this.$store.state.chinaMap.level;
+    },
+    currentArea() {
+      return this.$store.state.chinaMap.currentArea;
+    },
+    currentAdcode() {
+      return this.$store.state.chinaMap.currentAdcode;
+    },
+  },
   data() {
     return {
       realtimeData: [
@@ -157,6 +180,7 @@ export default {
           },
         ],
       },
+      properties: undefined,
     };
   },
   methods: {
@@ -169,9 +193,6 @@ export default {
     resetForm() {
       this.$refs["elForm"].resetFields();
     },
-    changeLevel(val){
-       sessionStorage.setItem('properties',JSON.stringify(val) )
-    }
   },
 };
 </script>
@@ -206,7 +227,8 @@ export default {
     }
   }
   .center {
-    height: 620px;
+    // width: 625px;
+    // height: 620px;
   }
   .right-another {
     background: url("../assets/image/right-another.png") no-repeat;

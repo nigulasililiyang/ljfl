@@ -9,6 +9,7 @@ import event from './modules/event'
 import getters from './getters'
 import menu from './modules/menu';
 import maintain from './modules/maintain';
+import chinaMap from './modules/chinaMap';
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -20,7 +21,8 @@ const store = new Vuex.Store({
     settings,
     event,
     menu,
-    maintain
+    maintain,
+    chinaMap
   },
   getters,
 

@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="app-container">
     当前地图范围：{{ currentArea }}（{{ level }}）<el-button
+      type="text"
       v-if="currentAdcode != 100000"
       @click="backToParent()"
       >返回上一层</el-button
     >
-    <div :style="{ height: height, width: width }" ref="myEchart"></div>
+    <div :style="{ height:smallSize?'620px': height, width: smallSize?'625px':width }" ref="myEchart"></div>
   </div>
 </template>
 <script>
@@ -22,33 +23,48 @@ export default {
   props: {
     width: {
       type: String,
-      default: "100%",
+      default: "1920px",
     },
     height: {
       type: String,
-      default: "100%",
+      default: "887px",
     },
+  },
+  computed: {
+    level() {
+      return this.$store.state.chinaMap.level;
+    },
+    currentArea() {
+      return this.$store.state.chinaMap.currentArea;
+    },
+    currentAdcode() {
+      return this.$store.state.chinaMap.currentAdcode;
+    },
+    // geoJson(){
+    //   return this.$store.state.chinaMap.geoJson
+    // }
   },
   data() {
     return {
       chart: null,
-      level: "country", //0:中国,1:省，2:市 3:区
-      currentArea: "全国",
-      currentAdcode: 100000,
+      // level: "country", //0:中国,1:省，2:市 3:区
+      // currentArea: "全国",
+      // currentAdcode: 100000,
       geoJson: {},
+      smallSize:false
     };
   },
-  mounted() {
+  created() {
     let properties = {
-      level: "country",
-      adcode: 100000,
-      name: "全国",
+      level: this.level,
+      adcode: this.currentAdcode,
+      name: this.currentArea,
     };
     this.showMap(properties);
   },
   methods: {
     changeLevel(zhName, adcode) {
-      let _this=this;
+      let _this = this;
       if (adcode == null) {
         _this.geoJson.features.forEach((element) => {
           if (element.properties.name == zhName) {
@@ -67,62 +83,43 @@ export default {
             })
             .on("end", function () {
               let feature = JSON.parse(datas).features[0];
-                _this.showMap(feature.properties);
-            })});
+              _this.showMap(feature.properties);
+            });
+        });
       }
     },
     showMap(properties) {
       let _this = this;
-      if (properties.level == "district") {
-        var http = require("http");
-        var fs = require("fs");
-        http.get(apiPre + properties.adcode + apiSuf, function (res) {
-          res.setEncoding("utf-8");
-          var datas = "";
-          res
-            .on("data", function (data) {
-              datas += data;
-            })
-            .on("end", function () {
-              myChart = null;
-              _this.level = properties.level;
-              _this.currentArea = properties.name;
-              _this.currentAdcode = properties.adcode;
-              _this.geoJson = JSON.parse(datas);
-              echarts.registerMap(_this.currentArea, _this.geoJson);
-              myChart = echarts.init(_this.$refs.myEchart);
-              // window.onresize = myChart.resize;
-              myChart.setOption(_this.getOption(_this.currentArea));
-              _this.$emit("changeLevel", properties);
-            });
-        });
-      } else {
-        var http = require("http");
-        var fs = require("fs");
-        http.get(apiPre + properties.adcode + apiFullSuf, function (res) {
-          res.setEncoding("utf-8");
-          var datas = "";
-          res
-            .on("data", function (data) {
-              datas += data;
-            })
-            .on("end", function () {
-              myChart = null;
-              _this.level = properties.level;
-              _this.currentArea = properties.name;
-              _this.currentAdcode = properties.adcode;
-              _this.geoJson = JSON.parse(datas);
-              echarts.registerMap(_this.currentArea, _this.geoJson);
-              myChart = echarts.init(_this.$refs.myEchart);
-              // window.onresize = myChart.resize;
-              myChart.setOption(_this.getOption(_this.currentArea));
-              _this.$emit("changeLevel", properties);
+      var http = require("http");
+      var fs = require("fs");
+      http.get(apiPre + properties.adcode + apiFullSuf, function (res) {
+        res.setEncoding("utf-8");
+        var datas = "";
+        res
+          .on("data", function (data) {
+            datas += data;
+          })
+          .on("end", function () {
+            _this.smallSize=(properties.level == "district"?true:false);
+            myChart = null;
+            _this.$store.dispatch("SetCurrentMap", properties);
+            _this.geoJson = JSON.parse(datas);
+            echarts.registerMap(properties.name, _this.geoJson);
+            myChart = echarts.init(_this.$refs.myEchart);
+            myChart.setOption(_this.getOption(_this.currentArea));
+            myChart.resize;
+            if (properties.level == "city") {
+              myChart.on("click", function (param) {
+                _this.setSelected(param);
+              });
+            } else {
               myChart.on("click", function (param) {
                 _this.changeLevel(param.name);
               });
-            });
-        });
-      }
+            }
+          });
+      });
+      // }
     },
     backToParent() {
       let acroutes = this.geoJson.features[0].properties.acroutes;
@@ -135,6 +132,27 @@ export default {
           }
         });
       }
+    },
+    setSelected(param) {
+      var selected = param.selected;
+      var mapSeries = option.series[0];
+      var data = [];
+      var legendData = [];
+      var name;
+      for (var p = 0, len = mapSeries.data.length; p < len; p++) {
+        name = mapSeries.data[p].name;
+        //mapSeries.data[p].selected = selected[name];
+        if (selected[name]) {
+          data.push({
+            name: name,
+            value: mapSeries.data[p].value,
+          });
+          legendData.push(name);
+        }
+      }
+      option.legend.data = legendData;
+      option.series[1].data = data;
+      myChart.setOption(option, true);
     },
     getOption(pyName) {
       var option = {
@@ -160,20 +178,11 @@ export default {
           left: "right",
           top: "center",
         },
-        dataRange: {
-          show: false,
-          min: 0,
-          max: 1000,
-          text: ["High", "Low"],
-          realtime: true,
-          calculable: true,
-          color: ["orangered", "yellow", "lightskyblue"],
-        },
         geo: [
           // 这个是重点配置区
           {
             map: pyName, // 表示中国地图
-            roam: false,
+            // roam: true,
             zoom: 1.25,
             zlevel: 2,
             z: 1,
@@ -197,42 +206,13 @@ export default {
               },
             },
           },
-          //   {
-          //     map: pyName,
-          //     roam: false,
-          //     zoom: 1.25,
-          //     zlevel: 0,
-          //     z: 0,
-          //     label: {
-          //       normal: {
-          //         show: false,
-          //       },
-          //       emphasis: {
-          //         show: false,
-          //       },
-          //     },
-          //     itemStyle: {
-          //       normal: {
-          //         borderColor: "#013a67",
-          //         borderWidth: 1,
-          //         areaColor: "#0aade4",
-          //         shadowColor: "rgb(2, 34, 105)",
-          //         shadowBlur: 0,
-          //         shadowOffsetY: 20,
-          //       },
-          //       emphasis: {
-          //         borderWidth: 1,
-          //         areaColor: "#07aae1",
-          //         borderColor: "#013a67",
-          //       },
-          //     },
-          //   },
         ],
         series: [
           {
             type: "lines",
             coordinateSystem: "geo",
             zlevel: 1,
+            // roam: true,
             effect: {
               show: true,
               period: 4,
@@ -249,6 +229,7 @@ export default {
                 color: "#33dbfc",
               },
             },
+            selectedMode: "multiple",
           },
         ],
       };
