@@ -3,6 +3,7 @@
     当前地图范围：{{ currentArea }}（{{ level }}）<el-button
       v-if="currentAdcode != 100000"
       @click="backToParent()"
+      type="text"
       >返回上一层</el-button
     >
     <div :style="{ height: height, width: width }" ref="myEchart"></div>
@@ -38,6 +39,10 @@ export default {
       geoJson: {},
     };
   },
+  beforeUpdate() {
+    console.log("111");
+    myChart.resize();
+  },
   mounted() {
     let properties = {
       level: "country",
@@ -48,7 +53,7 @@ export default {
   },
   methods: {
     changeLevel(zhName, adcode) {
-      let _this=this;
+      let _this = this;
       if (adcode == null) {
         _this.geoJson.features.forEach((element) => {
           if (element.properties.name == zhName) {
@@ -67,8 +72,9 @@ export default {
             })
             .on("end", function () {
               let feature = JSON.parse(datas).features[0];
-                _this.showMap(feature.properties);
-            })});
+              _this.showMap(feature.properties);
+            });
+        });
       }
     },
     showMap(properties) {
@@ -84,16 +90,21 @@ export default {
               datas += data;
             })
             .on("end", function () {
-              myChart = null;
-              _this.level = properties.level;
-              _this.currentArea = properties.name;
-              _this.currentAdcode = properties.adcode;
-              _this.geoJson = JSON.parse(datas);
-              echarts.registerMap(_this.currentArea, _this.geoJson);
-              myChart = echarts.init(_this.$refs.myEchart);
-              // window.onresize = myChart.resize;
-              myChart.setOption(_this.getOption(_this.currentArea));
               _this.$emit("changeLevel", properties);
+              _this.$nextTick(() => {
+                if (myChart != null) {
+                  myChart.dispose();
+                }
+                _this.level = properties.level;
+                _this.currentArea = properties.name;
+                _this.currentAdcode = properties.adcode;
+                _this.geoJson = JSON.parse(datas);
+                echarts.registerMap(_this.currentArea, _this.geoJson);
+                myChart = echarts.init(_this.$refs.myEchart);
+                console.log("222");
+                // window.onresize = myChart.resize;
+                myChart.setOption(_this.getOption(_this.currentArea));
+              });
             });
         });
       } else {
@@ -107,18 +118,23 @@ export default {
               datas += data;
             })
             .on("end", function () {
-              myChart = null;
-              _this.level = properties.level;
-              _this.currentArea = properties.name;
-              _this.currentAdcode = properties.adcode;
-              _this.geoJson = JSON.parse(datas);
-              echarts.registerMap(_this.currentArea, _this.geoJson);
-              myChart = echarts.init(_this.$refs.myEchart);
-              // window.onresize = myChart.resize;
-              myChart.setOption(_this.getOption(_this.currentArea));
               _this.$emit("changeLevel", properties);
-              myChart.on("click", function (param) {
-                _this.changeLevel(param.name);
+              _this.$nextTick(() => {
+                if (myChart != null) {
+                  myChart.dispose();
+                }
+                _this.level = properties.level;
+                _this.currentArea = properties.name;
+                _this.currentAdcode = properties.adcode;
+                _this.geoJson = JSON.parse(datas);
+                echarts.registerMap(_this.currentArea, _this.geoJson);
+                myChart = echarts.init(_this.$refs.myEchart);
+                // window.onresize = myChart.resize;
+                console.log("222");
+                myChart.setOption(_this.getOption(_this.currentArea));
+                myChart.on("click", function (param) {
+                  _this.changeLevel(param.name);
+                });
               });
             });
         });

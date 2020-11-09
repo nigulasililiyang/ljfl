@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-row class="row">
-      <el-col :span="8" class="inline x-flex-center">
-        <div class="item">
+      <el-col :span="8" class="inline x-flex-center" v-show="properties.level=='city'||properties.level=='district'">
+        <div class="item" >
           <div class="inline x-flex-center y-flex-center">
             <div class="left-right-title">实时数据</div>
             <div class="left-another"></div>
@@ -30,12 +30,12 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="8" class="inline x-flex-center">
+       <el-col :span="(properties.level=='city'||properties.level=='district')?8:24" class="inline x-flex-center">
         <div class="center">
-           <china-map width="625px" height="603px" @changeLevel="changeLevel"/>
+           <china-map  :width="(properties.level=='city'||properties.level=='district')?'625px':'1920px'" :height="(properties.level=='city'||properties.level=='district')?'625px':'924px'"  @changeLevel="changeLevel"/>
         </div>
       </el-col>
-      <el-col :span="8" class="inline x-flex-center">
+      <el-col :span="8" class="inline x-flex-center" v-show="properties.level=='city'||properties.level=='district'">
         <div class="item">
           <div class="inline x-flex-center y-flex-center">
             <div class="right-another"></div>
@@ -88,7 +88,7 @@
         </div>
       </el-col>
     </el-row>
-    <div class="inline y-flex-center" style="justify-content: space-around">
+    <div class="inline y-flex-center" style="justify-content: space-around" v-show="properties.level=='city'||properties.level=='district'">
       <div class="bottom-left-bg"></div>
       <div
         class="bottom-item-bg"
@@ -212,7 +212,12 @@ export default {
 {province:"海南省",capital:"海口"},
 {province:"香港",capital:"香港"},
 {province:"澳门",capital:"澳门"}
-      ]
+      ],
+      properties:{
+          level: "country",
+      adcode: 100000,
+      name: "全国",
+      }
     };
   },
   methods: {
@@ -315,6 +320,7 @@ export default {
     },
     changeLevel(val){
        sessionStorage.setItem('properties',JSON.stringify(val) )
+       this.properties=val;
        //只有两次点击的地区名称不一致时才需要重新加载
        let curAreaName = val.name;
         if(val.level == "province"){
