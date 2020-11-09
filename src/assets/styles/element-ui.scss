@@ -383,3 +383,6 @@ body {
 .el-notification.alarmnotify.warning{
   border-left: 10px solid #F4EA2A;
 }
+.el-link.is-underline:hover:after{
+  border-color: #00e5ff;
+}

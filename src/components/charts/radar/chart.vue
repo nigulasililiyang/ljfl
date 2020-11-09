@@ -21,10 +21,10 @@ export default {
       type: String,
       default: "100%",
     },
-     chartData: {
-        type: Array,
-        required: true
-      }
+    chartData: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
@@ -59,21 +59,25 @@ export default {
       this.setOptions(this.chartData);
     },
     setOptions() {
-    let indicator=[];
-    let valueList=[];
-    let maxData=Math.max.apply(Math, this.chartData.map(function(o) {return o.value}))
-    for (let data of this.chartData) {
-        let indicatorItem={name:data.name,max:maxData};
-        indicator.push(indicatorItem);
-        valueList.push(data.value);
-    }
+      let indicator = this.chartData.indicator;
+      let valueList = this.chartData.data;
       this.chart.setOption({
-        tooltip: {},
+         tooltip: {
+        trigger: 'axis'
+    },
+        legend: {
+          left: "right",
+          data: ["杭州", "金华"],
+          orient: "vertical",
+          textStyle: {
+            color: "#ffffff",
+          },
+        },
         radar: {
           name: {
             textStyle: {
               color: "#fff",
-              padding: [0, 0]
+              padding: [0, 0],
             },
           },
           splitArea: {
@@ -91,23 +95,24 @@ export default {
               color: "#3589e4",
             },
           },
-          indicator:indicator,
+          indicator: indicator,
         },
         series: {
           type: "radar",
+          tooltip: {
+            trigger: "item",
+          },
           symbol: "circle",
           symbolSize: 5,
-          color: ["#3589e4"],
+          color: ["#3589e4", "#a101fe"],
           lineStyle: {
             color: "#38a8dc",
           },
-          areaStyle: { color: "#38a8dc", opacity: 0.86 },
-          data: [
-            {
-              value: valueList,
-              name: "各类指标得分情况",
-            },
+          areaStyle: [
+            { color: "#38a8dc", opacity: 0.86 },
+            { color: "#a101fe", opacity: 0.86 },
           ],
+          data: valueList,
         },
       });
     },

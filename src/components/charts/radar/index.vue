@@ -1,12 +1,13 @@
 <template>
-  <div style="height:280px;display:flex; align-items: center;justify-content: space-around;">
-    <Chart :chartData="radarData" width="300px" height="250px"></Chart>
-    <div>
-      <div v-for="(data, index) in radarData" :key="index" style="text-align:left;line-height: 40px;">
-        <span style="font-size:18px;"> {{ data.name }}</span>
-        <span style="font-size:20px;"> {{ data.value }}</span>
-      </div>
-    </div>
+  <div
+    style="
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    "
+  >
+    <Chart :chartData="radarData" width="400px" height="250px"></Chart>
   </div>
 </template>
 
@@ -17,14 +18,20 @@ export default {
   components: { Chart },
   data() {
     return {
-      radarData: [
-        { name: "分类收集", value: 6500 },
-        { name: "分类运输", value: 16000 },
-        { name: "分类处理", value: 30000 },
-        { name: "分类回收", value: 38000 },
-        { name: "社会因素", value: 52000 },
-        { name: "经济因素", value: 25000 },
-      ],
+      radarData: {
+        indicator: [
+          { name: "分类收集", max: 7500 },
+          { name: "分类运输", max: 26000 },
+          { name: "分类处理", max: 40000 },
+          { name: "分类回收", max: 48000 },
+          { name: "社会因素", max: 62000 },
+          { name: "经济因素", max: 35000 },
+        ],
+        data: [
+          { name: "杭州", value: [6500, 16000, 30000, 38000, 52000, 25000] },
+          { name: "金华", value: [3500, 17000, 30000, 36000, 50000, 24000] },
+        ],
+      },
     };
   },
 };
