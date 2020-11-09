@@ -22,7 +22,7 @@ export default {
       default: "100%",
     },
     chartData: {
-      type: Array,
+      type: Object,
       required: true,
     },
   },
@@ -61,13 +61,17 @@ export default {
     setOptions() {
       let indicator = this.chartData.indicator;
       let valueList = this.chartData.data;
+      let legend=[];
+      valueList.forEach(element => {
+        legend.push(element.name)
+      });
       this.chart.setOption({
          tooltip: {
         trigger: 'axis'
     },
         legend: {
           left: "right",
-          data: ["杭州", "金华"],
+          data: legend,
           orient: "vertical",
           textStyle: {
             color: "#ffffff",

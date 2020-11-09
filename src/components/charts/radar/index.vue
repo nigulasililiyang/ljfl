@@ -63,14 +63,22 @@ export default {
         if(response.code == 200){
           let quotaGroups = response.quotaGroups;
           this.radarData = [];
+          let indicator=[];
+          let data=[];
+          let dataHZ=[];
           quotaGroups.forEach(element=>{
-            let tmp = {
-              name:element.quota_group_name,
-              value:element.score,
-              valueHZ:element.hz_score
-            };
-            this.radarData.push(tmp);
+            indicator.push({name:element.quota_group_name});
+            data.push(element.score);
+            dataHZ.push(element.hz_score)
           });
+          this.radarData={
+            indicator:indicator,
+            data:[
+              {name:"当前选中",value:data},
+              {name:"杭州",value:dataHZ}
+            ]
+          }
+          console.log(this.radarData);
         }
       });   
     }
