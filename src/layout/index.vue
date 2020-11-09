@@ -30,7 +30,7 @@ export default {
   },
   mixins: [ResizeMixin],
   computed: {
-    ...mapGetters(["parentListMenu"]),
+    //...mapGetters(["parentListMenu"]),
     ...mapState({
       sidebar: state => state.app.sidebar,
       subMenu: state => state.app.subMenu,
