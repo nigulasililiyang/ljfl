@@ -70,12 +70,13 @@ export default {
         trigger: 'axis'
     },
         legend: {
-          left: "right",
+          left: "left",
           data: legend,
-          orient: "vertical",
+          // orient: "vertical",
           textStyle: {
             color: "#ffffff",
           },
+          top:"10px"
         },
         radar: {
           name: {
@@ -100,6 +101,8 @@ export default {
             },
           },
           indicator: indicator,
+          center: ['50%', '60%'],
+          radius: 80
         },
         series: {
           type: "radar",

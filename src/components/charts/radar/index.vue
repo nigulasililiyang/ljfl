@@ -7,7 +7,13 @@
       justify-content: space-around;
     "
   >
-    <Chart :chartData="radarData" width="400px" height="250px"></Chart>
+    <Chart :chartData="radarData" width="320px" height="280px"></Chart>
+        <div style="display: grid;">
+      <div v-for="(data, index) in panelData" :key="index" style="display: flex;text-align:left;line-height:36px;">
+        <span style="padding-right:18px;"> {{ data.name }}</span>
+        <span> {{ data.value }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -38,6 +44,7 @@ export default {
           { name: "金华", value: [3500, 17000, 30000, 36000, 50000, 24000] },
         ],
       },
+      panelData:[]
     };
   },
   created() {
@@ -63,12 +70,14 @@ export default {
         if(response.code == 200){
           let quotaGroups = response.quotaGroups;
           this.radarData = [];
+          this.panelData=[];
           let indicator=[];
           let data=[];
           let dataHZ=[];
           quotaGroups.forEach(element=>{
             indicator.push({name:element.quota_group_name});
             data.push(element.score);
+            this.panelData.push({name:element.quota_group_name,value:element.score});
             dataHZ.push(element.hz_score)
           });
           this.radarData={
