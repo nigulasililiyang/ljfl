@@ -353,11 +353,11 @@ export default {
       fieldOptions: [
         {
           label: "是",
-          value: 1,
+          value: "1",
         },
         {
           label: "否",
-          value: 0,
+          value: "0",
         },
       ],
       areaInfo: undefined,
@@ -410,7 +410,8 @@ export default {
               listQuestions(this.queryForm).then((res) => {
                 if (res.code == 200) {
                   this.questionList = res.questions;
-                  this.questionListGroup = this.groupByGroups(res.questions);
+                  this.setDefaultFormData();
+                  this.questionListGroup = this.groupByGroups(res.questions); 
                   console.log(this.questionListGroup);
                 }
               });
@@ -431,6 +432,12 @@ export default {
       }
       return map;
     },
+    setDefaultFormData(){
+      this.questionList.forEach(ele => {
+        let key=ele.quota_tag;
+        this.formData[key]=ele.quota_value;
+      });
+    }
   },
   computed: {
     content() {
