@@ -37,6 +37,21 @@
             />
           </el-input>
         </el-form-item>
+        <el-form-item prop="confirmPassword" v-show="registerForm.password">
+          <el-input
+            v-model="registerForm.confirmPassword"
+            type="password"
+            auto-complete="off"
+            placeholder="再次输入密码"
+            @keyup.enter.native="handleRegister"
+          >
+            <svg-icon
+              slot="prefix"
+              icon-class="password"
+              class="el-input__icon input-icon"
+            />
+          </el-input>
+        </el-form-item>
         <el-form-item prop="code">
           <el-input
             v-model="registerForm.code"
@@ -102,13 +117,20 @@ import { selectRecordInfoConfigByKeys } from "@/api/system/config";
 export default {
   name: "Register",
   data() {
+     const equalToPassword = (rule, value, callback) => {
+      if (this.registerForm.password !== value) {
+        callback(new Error("两次输入的密码不一致"));
+      } else {
+        callback();
+      }
+    };
     return {
       recordnoform: {},
       // codeUrl: "",
-      cookiePassword: "",
       registerForm: {
         username: "",
         password: "",
+        confirmPassword:"",
         code: "",
       },
       loginRules: {
@@ -125,6 +147,14 @@ export default {
             trigger: "blur",
             message: "密码不能为空",
           },
+        ],
+        confirmPassword:[
+          {
+            required: true,
+            trigger: "blur",
+            message: "请再次输入密码",
+          },
+           { validator: equalToPassword, trigger: 'blur', required: true }
         ],
         code: [
           {
@@ -160,21 +190,6 @@ export default {
       this.$refs.registerForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          if (this.registerForm.rememberMe) {
-            Cookies.set("username", this.registerForm.username, {
-              expires: 30,
-            });
-            Cookies.set("password", encrypt(this.registerForm.password), {
-              expires: 30,
-            });
-            Cookies.set("rememberMe", this.registerForm.rememberMe, {
-              expires: 30,
-            });
-          } else {
-            Cookies.remove("username");
-            Cookies.remove("password");
-            Cookies.remove("rememberMe");
-          }
           this.$store
             .dispatch("Login", this.registerForm)
             .then(() => {
