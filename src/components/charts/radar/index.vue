@@ -8,9 +8,13 @@
     "
   >
     <Chart :chartData="radarData" width="320px" height="280px"></Chart>
-        <div style="display: grid;">
-      <div v-for="(data, index) in panelData" :key="index" style="display: flex;text-align:left;line-height:36px;">
-        <span style="padding-right:18px;"> {{ data.name }}</span>
+    <div style="display: grid">
+      <div
+        v-for="(data, index) in panelData"
+        :key="index"
+        style="display: flex; text-align: left; line-height: 36px"
+      >
+        <span style="padding-right: 18px"> {{ data.name }}</span>
         <span> {{ data.value }}</span>
       </div>
     </div>
@@ -23,10 +27,10 @@ import { listQuotaGroups } from "@/api/system/quotas";
 export default {
   components: { Chart },
   props: {
-     areaTag: {
-        type: String,
-        required: true
-      }
+    areaTag: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -44,53 +48,55 @@ export default {
           { name: "金华", value: [3500, 17000, 30000, 36000, 50000, 24000] },
         ],
       },
-      panelData:[]
+      panelData: [],
     };
   },
   created() {
     // this.getCode();
     this.getQuotaGroups();
   },
-  watch:{
-    areaTag:function(){
+  watch: {
+    areaTag: function () {
       this.getQuotaGroups();
-    }
+    },
   },
   methods: {
     //获取分类指标
-    getQuotaGroups(){
-      if(this.areaTag.length == 0){
+    getQuotaGroups() {
+      if (this.areaTag.length == 0) {
         return;
       }
       //获取分组得分信息
       let queryForm = {
-        areaTag:this.areaTag
+        areaTag: this.areaTag,
       };
-      listQuotaGroups(queryForm).then(response => {
-        if(response.code == 200){
+      listQuotaGroups(queryForm).then((response) => {
+        if (response.code == 200) {
           let quotaGroups = response.quotaGroups;
           this.radarData = [];
-          this.panelData=[];
-          let indicator=[];
-          let data=[];
-          let dataHZ=[];
-          quotaGroups.forEach(element=>{
-            indicator.push({name:element.quota_group_name});
+          this.panelData = [];
+          let indicator = [];
+          let data = [];
+          let dataHZ = [];
+          quotaGroups.forEach((element) => {
+            indicator.push({ name: element.quota_group_name });
             data.push(element.score);
-            this.panelData.push({name:element.quota_group_name,value:element.score});
-            dataHZ.push(element.hz_score)
+            this.panelData.push({
+              name: element.quota_group_name,
+              value: element.score,
+            });
+            dataHZ.push(element.hz_score);
           });
-          this.radarData={
-            indicator:indicator,
-            data:[
-              {name:"当前选中",value:data},
-              {name:"杭州",value:dataHZ}
-            ]
-          }
-          console.log(this.radarData);
+          this.radarData = {
+            indicator: indicator,
+            data: [
+              { name: "当前选中", value: data },
+              { name: "杭州", value: dataHZ },
+            ],
+          };
         }
-      });   
-    }
-  }
+      });
+    },
+  },
 };
 </script>

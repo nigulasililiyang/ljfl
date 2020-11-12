@@ -1,15 +1,19 @@
 <template>
   <div>
     <el-row class="row">
-      <el-col :span="8" class="inline x-flex-center" v-show="properties.level=='city'||properties.level=='district'">
-        <div class="item" >
+      <el-col
+        :span="8"
+        class="inline x-flex-center"
+        v-show="properties.level == 'city' || properties.level == 'district'"
+      >
+        <div class="item">
           <div class="inline x-flex-center y-flex-center">
             <div class="left-right-title">实时数据</div>
             <div class="left-another"></div>
           </div>
           <div class="left">
             <div class="sub-title">当前数据:</div>
-            <div class="inline realtime y-flex-center">
+            <div class="inline realtime y-flex-center x-flex-space-around">
               <div
                 v-for="(data, index) in realtimeData"
                 :key="index"
@@ -26,16 +30,37 @@
               </div>
             </div>
             <div class="sub-title">各类指标得分情况:</div>
-            <Radar :areaTag="queryForm.areaTag"/>
+            <Radar :areaTag="queryForm.areaTag" />
           </div>
         </div>
       </el-col>
-       <el-col :span="(properties.level=='city'||properties.level=='district')?8:24" class="inline x-flex-center">
+      <el-col
+        :span="
+          properties.level == 'city' || properties.level == 'district' ? 8 : 24
+        "
+        class="inline x-flex-center"
+      >
         <div class="center">
-           <china-map  :width="(properties.level=='city'||properties.level=='district')?'625px':'1920px'" :height="(properties.level=='city'||properties.level=='district')?'625px':'924px'"  @changeLevel="changeLevel"/>
+          <china-map
+            :width="
+              properties.level == 'city' || properties.level == 'district'
+                ? '625px'
+                : '1920px'
+            "
+            :height="
+              properties.level == 'city' || properties.level == 'district'
+                ? '625px'
+                : '924px'
+            "
+            @changeLevel="changeLevel"
+          />
         </div>
       </el-col>
-      <el-col :span="8" class="inline x-flex-center" v-show="properties.level=='city'||properties.level=='district'">
+      <el-col
+        :span="8"
+        class="inline x-flex-center"
+        v-show="properties.level == 'city' || properties.level == 'district'"
+      >
         <div class="item">
           <div class="inline x-flex-center y-flex-center">
             <div class="right-another"></div>
@@ -43,7 +68,7 @@
           </div>
           <div class="right">
             <div class="sub-title">当前城市报告</div>
-            <div class="city-report inline y-flex-center">
+            <div class="city-report inline y-flex-center x-flex-space-around">
               <div
                 style="
                   width: 96px;
@@ -56,7 +81,7 @@
                   color: #00ff12;
                 "
               >
-                {{areaInfo.score_grade_name}}
+                {{ areaInfo.score_grade_name }}
               </div>
               <div style="text-align: center">
                 <p
@@ -68,7 +93,7 @@
                     margin: 0;
                   "
                 >
-                  {{areaInfo.total_score}}
+                  {{ areaInfo.total_score }}
                 </p>
                 <p style="font-size: 18px; margin: 0">总体评分</p>
               </div>
@@ -77,7 +102,7 @@
                   12:56:12 星期三
                 </p>
                 <p style="font-size: 16px; line-height: 30px; margin: 0">
-                  分类建议：{{areaInfo.classify_name}}
+                  分类建议：{{ areaInfo.classify_name }}
                 </p>
                 <p style="font-size: 31px; margin: 0">浙江-杭州</p>
               </div>
@@ -88,32 +113,91 @@
         </div>
       </el-col>
     </el-row>
-    <div class="inline y-flex-center" style="justify-content: space-around" v-show="properties.level=='city'||properties.level=='district'">
-      <div class="bottom-left-bg"></div>
-      <div
-        class="bottom-item-bg"
-        v-for="(item, index) in bottomItemList"
-        :key="index"
+    <div v-show="properties.level == 'city' || properties.level == 'district'">
+      <el-row
+        v-if="areaInfo.is_need_suggestion == '0'"
+        type="flex"
+        align="center"
+        justify="center"
+        ><div style="font-size: 24px; line-height: 204px; letter-spacing: 15px">
+          当前城市环卫水平达标，请继续保持。
+        </div></el-row
       >
-        <div class="title">{{ item.title }}</div>
-        <div class="inline y-flex-center" style="justify-content: space-around">
-          <svg-icon class="bottom-icon-bg" :icon-class="item.icon" />
-          <div class="content">{{ item.content }}</div>
+      <div v-else class="inline y-flex-center x-flex-space-around">
+        <div
+          class="bottom-left-bg"
+          @click="lastOne(suggestionList.length)"
+        ></div>
+        <div style="width: 1263px; overflow: hidden">
+          <div
+            :class="[
+              'inline',
+              { 'x-flex-space-around': suggestionList.length < 3 },
+            ]"
+          >
+            <div
+              ref="wrape"
+              :class="{ 'bottom-item-bg': true }"
+              v-for="(suggestion, index) in suggestionList"
+              :key="index"
+            >
+              <div class="title">{{ suggestion.title }}</div>
+              <div class="inline y-flex-center x-flex-space-around">
+                <svg-icon class="bottom-icon-bg" icon-class="type" />
+                <el-tooltip placement="right" effect="light">
+                  <template slot="content"
+                    ><div style="width: 200px; font-size: 19px; color: #000000">
+                      {{ suggestion.content }}
+                    </div></template
+                  >
+                  <div class="content">
+                    {{ suggestion.content }}
+                  </div></el-tooltip
+                >
+              </div>
+            </div>
+          </div>
         </div>
+        <div
+          class="bottom-right-bg"
+          @click="nextOne(suggestionList.length)"
+        ></div>
       </div>
-      <div class="bottom-right-bg"></div>
     </div>
   </div>
 </template>
 <script>
 import Radar from "@/components/charts/radar/index";
 import ChinaMap from "@/components/charts/map/ChinaMap.vue";
-import { listQuotaRates,listQuotaGroups,getAreaInfo,listQuestions,getAreaByName  } from "@/api/system/quotas";
+import {
+  listQuotaRates,
+  listQuotaGroups,
+  getAreaInfo,
+  listQuestions,
+  getAreaByName,
+} from "@/api/system/quotas";
 export default {
   name: "Index",
-  components: { Radar,ChinaMap },
+  components: { Radar, ChinaMap },
+  computed: {
+    suggestionList() {
+      let suggestions = [];
+      this.quotaGroups.forEach((ele) => {
+        ele.suggestions.forEach((suggestion) => {
+          suggestions.push({
+            title: ele.quota_group_name,
+            content: suggestion.low_score_suggestion,
+          });
+        });
+      });
+      return suggestions;
+    },
+  },
   data() {
     return {
+      toLastAnimating: false,
+      toNextAnimating: false,
+      currentIndex: 0,
       realtimeData: [
         {
           title: "可回收垃圾",
@@ -150,23 +234,23 @@ export default {
         },
       ],
       //区域基本信息
-      areaInfo:{
-        area_tag:""
+      areaInfo: {
+        area_tag: "",
       },
       //区域分组得分情况
-      quotaGroups:[],
+      quotaGroups: [],
       //区域指标得分情况
-      quotaRates:[],
+      quotaRates: [],
       //问卷情况
-      questions:[],
+      questions: [],
       //查询参数
-      queryForm:{
-        areaTag:""
+      queryForm: {
+        areaTag: "",
       },
       //区域名称，只有当前区域名字
-      areaName:"",
+      areaName: "",
       //区域全称，省份-城市
-      areaFullName:"",
+      areaFullName: "",
       rules: {
         field102: [
           {
@@ -177,47 +261,47 @@ export default {
         ],
       },
       //省会列表
-      capitalList:[
-        {province:"北京市",capital:"北京"},
-{province:"上海市",capital:"上海"},
-{province:"天津市",capital:"天津"},
-{province:"重庆市",capital:"重庆"},
-{province:"黑龙江省",capital:"哈尔滨"},
-{province:"吉林省",capital:"长春"},
-{province:"辽宁省",capital:"沈阳"},
-{province:"内蒙古",capital:"呼和浩特"},
-{province:"河北省",capital:"石家庄"},
-{province:"新疆",capital:"乌鲁木齐"},
-{province:"甘肃省",capital:"兰州"},
-{province:"青海省",capital:"西宁"},
-{province:"陕西省",capital:"西安"},
-{province:"宁夏",capital:"银川"},
-{province:"河南省",capital:"郑州"},
-{province:"山东省",capital:"济南"},
-{province:"山西省",capital:"太原"},
-{province:"安徽省",capital:"合肥"},
-{province:"湖北省",capital:"武汉"},
-{province:"湖南省",capital:"长沙"},
-{province:"江苏省",capital:"南京"},
-{province:"四川省",capital:"成都"},
-{province:"贵州省",capital:"贵阳"},
-{province:"云南省",capital:"昆明"},
-{province:"广西省",capital:"南宁"},
-{province:"西藏",capital:"拉萨"},
-{province:"浙江省",capital:"杭州"},
-{province:"江西省",capital:"南昌"},
-{province:"广东省",capital:"广州"},
-{province:"福建省",capital:"福州"},
-{province:"台湾省",capital:"台北"},
-{province:"海南省",capital:"海口"},
-{province:"香港",capital:"香港"},
-{province:"澳门",capital:"澳门"}
+      capitalList: [
+        { province: "北京市", capital: "北京" },
+        { province: "上海市", capital: "上海" },
+        { province: "天津市", capital: "天津" },
+        { province: "重庆市", capital: "重庆" },
+        { province: "黑龙江省", capital: "哈尔滨" },
+        { province: "吉林省", capital: "长春" },
+        { province: "辽宁省", capital: "沈阳" },
+        { province: "内蒙古", capital: "呼和浩特" },
+        { province: "河北省", capital: "石家庄" },
+        { province: "新疆", capital: "乌鲁木齐" },
+        { province: "甘肃省", capital: "兰州" },
+        { province: "青海省", capital: "西宁" },
+        { province: "陕西省", capital: "西安" },
+        { province: "宁夏", capital: "银川" },
+        { province: "河南省", capital: "郑州" },
+        { province: "山东省", capital: "济南" },
+        { province: "山西省", capital: "太原" },
+        { province: "安徽省", capital: "合肥" },
+        { province: "湖北省", capital: "武汉" },
+        { province: "湖南省", capital: "长沙" },
+        { province: "江苏省", capital: "南京" },
+        { province: "四川省", capital: "成都" },
+        { province: "贵州省", capital: "贵阳" },
+        { province: "云南省", capital: "昆明" },
+        { province: "广西省", capital: "南宁" },
+        { province: "西藏", capital: "拉萨" },
+        { province: "浙江省", capital: "杭州" },
+        { province: "江西省", capital: "南昌" },
+        { province: "广东省", capital: "广州" },
+        { province: "福建省", capital: "福州" },
+        { province: "台湾省", capital: "台北" },
+        { province: "海南省", capital: "海口" },
+        { province: "香港", capital: "香港" },
+        { province: "澳门", capital: "澳门" },
       ],
-      properties:{
-          level: "country",
-      adcode: 100000,
-      name: "全国",
-      }
+      properties: {
+        level: "country",
+        adcode: 100000,
+        name: "全国",
+      },
     };
   },
   methods: {
@@ -230,10 +314,10 @@ export default {
     /**
      * 根据标签获取问题
      */
-    findQuestionByTag(questionTag){
+    findQuestionByTag(questionTag) {
       let question = null;
-      this.questions.forEach(element=>{
-        if(element.quota_tag == questionTag){
+      this.questions.forEach((element) => {
+        if (element.quota_tag == questionTag) {
           question = element;
         }
       });
@@ -242,10 +326,10 @@ export default {
     /**
      * 根据标签获取指标详情
      */
-    findQuotaRateByTag(quotaRateTag){
+    findQuotaRateByTag(quotaRateTag) {
       let quotaRate = null;
-      this.quotaRates.forEach(element=>{
-        if(element.quota_rate_tag == quotaRateTag){
+      this.quotaRates.forEach((element) => {
+        if (element.quota_rate_tag == quotaRateTag) {
           quotaRate = element;
         }
       });
@@ -254,113 +338,134 @@ export default {
     /**
      * 获取省会城市
      */
-    findProvinceCapital(province){
+    findProvinceCapital(province) {
       let provinceCapital = null;
-        this.capitalList.forEach(element=>{
-             if(element.province == province){
-               provinceCapital = element;
-             }
-           })
-        return provinceCapital;
+      this.capitalList.forEach((element) => {
+        if (element.province == province) {
+          provinceCapital = element;
+        }
+      });
+      return provinceCapital;
     },
     //获取区域的详细信息
-    getAreaDetail(){
-        //获取区域基本信息
-        // getAreaInfo(this.queryForm).then(response => {
-        //     if(response.code == 200){
-        //       this.areaInfo = response.areaInfo;
-        //     }
-        //   });
+    getAreaDetail() {
+      //获取区域基本信息
+      // getAreaInfo(this.queryForm).then(response => {
+      //     if(response.code == 200){
+      //       this.areaInfo = response.areaInfo;
+      //     }
+      //   });
 
-        //获取分组得分信息
-        listQuotaGroups(this.queryForm).then(response => {
-            if(response.code == 200){
-              this.quotaGroups = response.quotaGroups;
-            }
-          });   
-        
-        //获取指标得分详情 
-        listQuotaRates(this.queryForm).then(response => {
-            if(response.code == 200){
-               this.quotaRates = response.quotaRates;
-            }
-          });    
+      //获取分组得分信息
+      listQuotaGroups(this.queryForm).then((response) => {
+        if (response.code == 200) {
+          this.quotaGroups = response.quotaGroups;
+        }
+      });
 
-        //获取问卷详情     
-        listQuestions(this.queryForm).then(response => {
-          this.realtimeData = []
-            if(response.code == 200){
-              this.questions = response.questions;
-              let recoveryGarbage = this.findQuestionByTag('recovery_recovered');
-              let recovery = {
-                title:"可回收垃圾",
-                value:recoveryGarbage.quota_value,
-                icon: "recyclable-garbage.png"
-              };
-              this.realtimeData.push(recovery);
-              let kitchenGarbage = this.findQuestionByTag('real_kitchen_waste_deal');
-              let kitchen = {
-                title:"厨余垃圾",
-                value:kitchenGarbage.quota_value,
-                icon: "kitchen-garbage.png"
-              };
-              this.realtimeData.push(kitchen);
-              let harmfulGarbage = this.findQuestionByTag('real_harmful_waste_deal');
-              let harmful = {
-                title:"有害垃圾",
-                value:harmfulGarbage.quota_value,
-                icon: "harmful-garbage.png"
-              };
-              this.realtimeData.push(harmful);
-             }
-          }); 
+      //获取指标得分详情
+      listQuotaRates(this.queryForm).then((response) => {
+        if (response.code == 200) {
+          this.quotaRates = response.quotaRates;
+        }
+      });
+
+      //获取问卷详情
+      listQuestions(this.queryForm).then((response) => {
+        this.realtimeData = [];
+        if (response.code == 200) {
+          this.questions = response.questions;
+          let recoveryGarbage = this.findQuestionByTag("recovery_recovered");
+          let recovery = {
+            title: "可回收垃圾",
+            value: recoveryGarbage.quota_value,
+            icon: "recyclable-garbage.png",
+          };
+          this.realtimeData.push(recovery);
+          let kitchenGarbage = this.findQuestionByTag(
+            "real_kitchen_waste_deal"
+          );
+          let kitchen = {
+            title: "厨余垃圾",
+            value: kitchenGarbage.quota_value,
+            icon: "kitchen-garbage.png",
+          };
+          this.realtimeData.push(kitchen);
+          let harmfulGarbage = this.findQuestionByTag(
+            "real_harmful_waste_deal"
+          );
+          let harmful = {
+            title: "有害垃圾",
+            value: harmfulGarbage.quota_value,
+            icon: "harmful-garbage.png",
+          };
+          this.realtimeData.push(harmful);
+        }
+      });
     },
     resetForm() {
       this.$refs["elForm"].resetFields();
     },
-    changeLevel(val){
-       sessionStorage.setItem('properties',JSON.stringify(val) )
-       this.properties=val;
-       //只有两次点击的地区名称不一致时才需要重新加载
-       let curAreaName = val.name;
-        if(val.level == "province"){
-           //如果是省份，默认获取该省的省会城市
-           let element = this.findProvinceCapital(val.name);
-           if(element != null){
-             curAreaName = element.capital;
-             this.areaFullName = val.name + "-" + curAreaName;
-           }
-        }else if(val.level == "city"){
-           console.log(val);
-        }else{
-          //除了省会和地级市外，其它地区不予处理
-          return;
+    changeLevel(val) {
+      sessionStorage.setItem("properties", JSON.stringify(val));
+      this.properties = val;
+      //只有两次点击的地区名称不一致时才需要重新加载
+      let curAreaName = val.name;
+      if (val.level == "province") {
+        //如果是省份，默认获取该省的省会城市
+        let element = this.findProvinceCapital(val.name);
+        if (element != null) {
+          curAreaName = element.capital;
+          this.areaFullName = val.name + "-" + curAreaName;
         }
-       if(this.areaName != curAreaName){
-         this.areaName = curAreaName;
-          let params = {
-            areaName:curAreaName
+      } else if (val.level == "city") {
+        console.log(val);
+      } else {
+        //除了省会和地级市外，其它地区不予处理
+        return;
+      }
+      if (this.areaName != curAreaName) {
+        this.areaName = curAreaName;
+        let params = {
+          areaName: curAreaName,
+        };
+        getAreaByName(params).then((response) => {
+          if (response.code == 200) {
+            this.areaInfo = response.areaInfo;
+            this.queryForm.areaTag = this.areaInfo.area_tag;
+            this.getAreaDetail();
           }
-         getAreaByName(params).then(response=>{
-            if(response.code == 200){
-              this.areaInfo = response.areaInfo;
-              this.queryForm.areaTag = this.areaInfo.area_tag;
-              this.getAreaDetail();
-            }
-         });
+        });
 
-          console.log(this.areaInfo);
-       }
-
-    }
+        console.log(this.areaInfo);
+      }
+    },
+    lastOne(totalCount) {
+      if (this.currentIndex > 0) {
+        this.currentIndex -= 1;
+        this.$refs.wrape.forEach((element, index) => {
+          this.$refs.wrape[index].style.transform =
+            "translateX(-" + 421 * this.currentIndex + "px)";
+        });
+      }
+    },
+    nextOne(totalCount) {
+      if (this.currentIndex < totalCount - 3) {
+        this.currentIndex += 1;
+        this.$refs.wrape.forEach((element, index) => {
+          this.$refs.wrape[index].style.transform =
+            "translateX(-" + 421 * this.currentIndex + "px)";
+        });
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .row {
-  background: url("../assets/image/center-box.png") no-repeat;
-  background-size: 100% 100%;
+  // background: url("../assets/image/center-box.png") no-repeat;
+  // background-size: 100% 100%;
   .left-right-title {
     font-family: HYa0gj;
     font-size: 37px;
@@ -383,7 +488,6 @@ export default {
     .realtime {
       width: 470px;
       height: 143px;
-      justify-content: space-around;
     }
   }
   .center {
@@ -405,7 +509,6 @@ export default {
     .city-report {
       width: 100%;
       height: 170px;
-      justify-content: space-around;
     }
     .report {
     }
@@ -427,9 +530,11 @@ export default {
   height: 128px;
 }
 .bottom-item-bg {
+  transition: transform 0.4s linear;
   background: url("../assets/image/bottom-item-box.png") no-repeat;
   background-size: 100% 100%;
   width: 421px;
+  min-width: 421px;
   height: 229px;
   padding: 30px;
   .title {
@@ -445,6 +550,11 @@ export default {
     font-size: 19px;
     line-height: 30px;
     color: #ffffff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
   }
   .bottom-icon-bg {
     background: url("../assets/image/bottom-icon-bg.png") no-repeat;
@@ -466,7 +576,15 @@ export default {
 .x-flex-center {
   justify-content: center;
 }
+.x-flex-space-around {
+  justify-content: space-around;
+}
 .y-flex-center {
   align-items: center;
+}
+.bottom-left-bg:hover,
+.bottom-right-bg:hover {
+  transform: scale(1.25);
+  cursor: pointer;
 }
 </style>
