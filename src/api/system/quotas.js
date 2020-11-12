@@ -39,7 +39,7 @@ export function getAreaInfo(query) {
 // 查询区域信息
 export function getAreaByName(query) {
   return request({
-    url: '/getAreaInfo',
+    url: '/getAreaByName',
     method: 'get',
     params: query
   })

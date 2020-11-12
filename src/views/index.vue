@@ -104,7 +104,7 @@
                 <p style="font-size: 16px; line-height: 30px; margin: 0">
                   分类建议：{{ areaInfo.classify_name }}
                 </p>
-                <p style="font-size: 31px; margin: 0">浙江-杭州</p>
+                <p style="font-size: 31px; margin: 0">{{areaFullName}}</p>
               </div>
             </div>
             <div class="sub-title">报告</div>
@@ -482,10 +482,11 @@ export default {
         let element = this.findProvinceCapital(val.name);
         if (element != null) {
           curAreaName = element.capital;
-          this.areaFullName = val.name + "-" + curAreaName;
+          this.areaFullName = curAreaName;
         }
       } else if (val.level == "city") {
-        console.log(val);
+        curAreaName = val.name;
+        this.areaFullName = curAreaName;
       } else {
         //除了省会和地级市外，其它地区不予处理
         return;
@@ -498,12 +499,12 @@ export default {
         getAreaByName(params).then((response) => {
           if (response.code == 200) {
             this.areaInfo = response.areaInfo;
+            console.log(this.areaInfo);
             this.queryForm.areaTag = this.areaInfo.area_tag;
             this.getAreaDetail();
           }
         });
 
-        console.log(this.areaInfo);
       }
     },
     lastOne(totalCount) {
