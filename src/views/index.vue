@@ -108,7 +108,51 @@
               </div>
             </div>
             <div class="sub-title">报告</div>
-            <div class="report"></div>
+            <div class="report inline y-flex-center x-flex-center">
+              <el-table
+                :data="quotaRates"
+                height="258px"
+                size="mini"
+                :row-style="handleRow"
+                :header-cell-style="headerCellStyle"
+                :cell-style="cellStyle"
+                cell-class-name="cellbox"
+              >
+                <el-table-column
+                  label="类目"
+                  prop="quota_rate_name"
+                  align="center"
+                  width="150px"
+                  show-overflow-tooltip
+                />
+                <el-table-column
+                  label="各项"
+                  prop="score"
+                  align="center"
+                  width="50px"
+                />
+                <el-table-column
+                  label="权重"
+                  prop="quota_weight"
+                  align="center"
+                >
+                  <template slot-scope="scope">
+                    <div style="color: #37d7ff">
+                      {{ Number(scope.row.quota_weight).toFixed(4) }}
+                    </div></template
+                  >
+                </el-table-column>
+                <el-table-column label="加权得分" align="center">
+                  <template slot-scope="scope">
+                    {{
+                      Number(scope.row.score * scope.row.quota_weight).toFixed(
+                        4
+                      )
+                    }}
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
           </div>
         </div>
       </el-col>
@@ -198,6 +242,13 @@ export default {
       toLastAnimating: false,
       toNextAnimating: false,
       currentIndex: 0,
+      headerCellStyle: {
+        background: "#04549c!important",
+        height: "34px",
+        "line-height": "34px",
+        padding: "0px",
+      },
+      cellStyle: { height: "34px", "line-height": "34px", padding: "5px 0" },
       realtimeData: [
         {
           title: "可回收垃圾",
@@ -305,6 +356,21 @@ export default {
     };
   },
   methods: {
+    handleRow({ row, rowIndex }) {
+      let present = Number(row.quota_weight).toFixed(4) * 100;
+      console.log(present);
+      return {
+        background:
+          "linear-gradient(to right,#00a0e9 " +
+          present +
+          "%, transparent " +
+          present +
+          "%)",
+        "background-repeat": "no-repeat",
+        "background-size": "100% 5px",
+        "background-position-y": "bottom",
+      };
+    },
     submitForm() {
       this.$refs["elForm"].validate((valid) => {
         if (!valid) return;
@@ -511,6 +577,8 @@ export default {
       height: 170px;
     }
     .report {
+      width: 470px;
+      padding: 0 15px;
     }
   }
   .sub-title {
@@ -586,5 +654,15 @@ export default {
 .bottom-right-bg:hover {
   transform: scale(1.25);
   cursor: pointer;
+}
+</style>
+<style lang="scss">
+.el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: transparent !important;
+}
+.cellbox {
+  .cell {
+    background: #283e7b !important;
+  }
 }
 </style>
