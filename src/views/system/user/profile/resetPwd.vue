@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { updateUserPwd } from "@/api/system/user";
+import { changePassword } from "@/api/system/quotas";
 
 export default {
   data() {
@@ -55,12 +55,12 @@ export default {
     submit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          updateUserPwd(this.user.oldPassword, this.user.newPassword).then(
+          changePassword(this.user).then(
             response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
               } else {
-                this.msgError(response.msg);
+                this.msgError(response.message);
               }
             }
           );

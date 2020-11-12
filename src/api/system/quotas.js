@@ -53,3 +53,13 @@ export function addAnswer(data) {
     data: data
   })
 }
+
+
+// 新增参数配置
+export function changePassword(data) {
+  return request({
+    url: '/changePassword',
+    method: 'post',
+    data: data
+  })
+}
