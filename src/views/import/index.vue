@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-page-header title="重新选择" @back="goBack" :content="content">
+    <el-page-header title="重新选择" @back="goBack" :content="areaInfo.name">
     </el-page-header>
     <el-row type="flex" justify="center">
       <el-card style="width:70%">
@@ -60,6 +60,7 @@ import {
   getAreaByName,
   listQuotaGroups,
   listQuestions,
+  getAreaInfo
 } from "@/api/system/quotas";
 
 export default {
@@ -397,9 +398,9 @@ export default {
     },
     getQuestion() {
       let params = {
-        areaName: this.properties.name,
+        //areaName: this.properties.name,
       };
-      getAreaByName(params).then((response) => {
+      getAreaInfo(params).then((response) => {
         if (response.code == 200) {
           this.areaInfo = response.areaInfo;
           this.queryForm.areaTag = this.areaInfo.area_tag;
