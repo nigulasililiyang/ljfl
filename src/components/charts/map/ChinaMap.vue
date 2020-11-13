@@ -1,11 +1,27 @@
 <template>
   <div>
-    当前地图范围：{{ currentArea }}（{{ level }}）<el-button
-      v-if="level != 'country'"
-      @click="backToParent()"
-      type="text"
-      >返回上一层</el-button
-    >
+    <el-row type="flex" justify="space-between" align="center">
+      <div>当前地图范围：{{ currentArea }}（{{ level }}）</div>
+      <div v-if="level != 'country'">
+        <el-checkbox
+          v-model="checked1"
+          label="显示已评价区域"
+          border
+          size="mini"
+        ></el-checkbox>
+        <el-checkbox
+          v-model="checked2"
+          label="显示更新时间"
+          border
+          size="mini"
+        ></el-checkbox>
+      </div>
+    </el-row>
+    <el-row v-if="level != 'country'">
+      <el-button v-if="level != 'country'" @click="backToParent()" type="text"
+        >返回上一层</el-button
+      >
+    </el-row>
     <div
       :class="level != 'country' ? 'hasbg' : ''"
       :style="{ height: height, width: width }"
@@ -30,10 +46,10 @@ export default {
       type: String,
       default: "100%",
     },
-    color:{
+    color: {
       type: String,
       default: "#2081f7",
-    }
+    },
   },
   data() {
     return {
@@ -49,6 +65,8 @@ export default {
         label: "全国", //中文名
         name: "china", //拼音
       },
+      checked1:undefined,//显示已评价区域
+      checked2:undefined//显示更新时间
     };
   },
   beforeUpdate() {
@@ -121,7 +139,7 @@ export default {
         myChart.setOption(_this.getProvinceOption(provinceMap[_this.province]));
       });
     },
-    
+
     showChina() {
       let _this = this;
       let properties = _this.chinaProperties;
@@ -237,7 +255,8 @@ export default {
         ],
       };
       return option;
-    },getProvinceOption(pinyin) {
+    },
+    getProvinceOption(pinyin) {
       var option = {
         visualMap: {
           show: false,
@@ -287,7 +306,7 @@ export default {
             },
             itemStyle: {
               normal: {
-                areaColor:this.color,
+                areaColor: this.color,
                 borderColor: "#111",
               },
               emphasis: {
