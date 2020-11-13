@@ -4,7 +4,7 @@
       <el-col
         :span="8"
         class="inline x-flex-center"
-        v-show="properties.level == 'city' || properties.level == 'district'"
+        v-show="properties.level != 'country'"
       >
         <div class="item">
           <div class="inline x-flex-center y-flex-center">
@@ -36,19 +36,19 @@
       </el-col>
       <el-col
         :span="
-          properties.level == 'city' || properties.level == 'district' ? 8 : 24
+          properties.level != 'country' ? 8 : 24
         "
         class="inline x-flex-center"
       >
         <div class="center">
           <china-map
             :width="
-              properties.level == 'city' || properties.level == 'district'
+              properties.level != 'country'
                 ? '625px'
                 : '1920px'
             "
             :height="
-              properties.level == 'city' || properties.level == 'district'
+              properties.level != 'country'
                 ? '625px'
                 : '924px'
             "
@@ -56,11 +56,7 @@
           />
         </div>
       </el-col>
-      <el-col
-        :span="8"
-        class="inline x-flex-center"
-        v-show="properties.level == 'city' || properties.level == 'district'"
-      >
+      <el-col :span="8" class="inline x-flex-center" v-show="properties.level != 'country'">
         <div class="item">
           <div class="inline x-flex-center y-flex-center">
             <div class="right-another"></div>
@@ -104,7 +100,7 @@
                 <p style="font-size: 16px; line-height: 30px; margin: 0">
                   分类建议：{{ areaInfo.classify_name }}
                 </p>
-                <p style="font-size: 31px; margin: 0">{{areaFullName}}</p>
+                <p style="font-size: 31px; margin: 0">{{ areaFullName }}</p>
               </div>
             </div>
             <div class="sub-title">报告</div>
@@ -126,7 +122,7 @@
                   show-overflow-tooltip
                 />
                 <el-table-column
-                  label="各项"
+                  label="得分"
                   prop="score"
                   align="center"
                   width="50px"
@@ -157,7 +153,7 @@
         </div>
       </el-col>
     </el-row>
-    <div v-show="properties.level == 'city' || properties.level == 'district'">
+    <div v-show="properties.level != 'country'">
       <el-row
         v-if="areaInfo.is_need_suggestion == '0'"
         type="flex"
@@ -187,7 +183,22 @@
             >
               <div class="title">{{ suggestion.title }}</div>
               <div class="inline y-flex-center x-flex-space-around">
-                <svg-icon class="bottom-icon-bg" icon-class="type" />
+                <div class="bottom-icon-bg">
+                  <svg-icon
+                    style="
+                      font-size: 30px;
+                      position: absolute;
+                      left: 5px;
+                      top: 10px;
+                      background: #062969;
+                      border-radius: 35px;
+                      border: solid 1px;
+                    "
+                    color="#00e8fd"
+                    icon-class="num"
+                    class="el-input__icon input-icon"
+                  />{{ index + 1 }}
+                </div>
                 <el-tooltip placement="right" effect="light">
                   <template slot="content"
                     ><div style="width: 200px; font-size: 19px; color: #000000">
@@ -286,7 +297,7 @@ export default {
       ],
       //区域基本信息
       areaInfo: {
-        area_tag: "",
+        area_tag: "hangzhou701",
       },
       //区域分组得分情况
       quotaGroups: [],
@@ -299,7 +310,7 @@ export default {
         areaTag: "",
       },
       //区域名称，只有当前区域名字
-      areaName: "",
+      areaName: "hangzhou701",
       //区域全称，省份-城市
       areaFullName: "",
       rules: {
@@ -354,6 +365,19 @@ export default {
         name: "全国",
       },
     };
+  },
+  created() {
+    let params = {
+      areaName: "杭州",
+    };
+    getAreaByName(params).then((response) => {
+      if (response.code == 200) {
+        this.areaInfo = response.areaInfo;
+        console.log(this.areaInfo);
+        this.queryForm.areaTag = this.areaInfo.area_tag;
+        this.getAreaDetail();
+      }
+    });
   },
   methods: {
     handleRow({ row, rowIndex }) {
@@ -504,7 +528,6 @@ export default {
             this.getAreaDetail();
           }
         });
-
       }
     },
     lastOne(totalCount) {
@@ -630,7 +653,11 @@ export default {
     background-size: 100% 100%;
     width: 103px;
     height: 103px;
-    padding: 30px;
+    font-size: 56px;
+    text-align: center;
+    line-height: 103px;
+    position: relative;
+    color: #fea501;
   }
 }
 .bottom-right-bg {
