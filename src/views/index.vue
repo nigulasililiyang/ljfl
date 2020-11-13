@@ -52,6 +52,7 @@
                 ? '625px'
                 : '924px'
             "
+            :color.sync="areaColor"
             @changeLevel="changeLevel"
           />
         </div>
@@ -247,6 +248,10 @@ export default {
       });
       return suggestions;
     },
+    areaColor(){
+        let color=(this.areaInfo.classify_name=='四分法'?'green':(areaInfo.classify_name=='三分法'?'yellow':(areaInfo.classify_name=='二分法'?'orangered':'#2081f7')));
+        return color;
+    }
   },
   data() {
     return {
@@ -500,16 +505,16 @@ export default {
       sessionStorage.setItem("properties", JSON.stringify(val));
       this.properties = val;
       //只有两次点击的地区名称不一致时才需要重新加载
-      let curAreaName = val.name;
+      let curAreaName = val.label;
       if (val.level == "province") {
         //如果是省份，默认获取该省的省会城市
-        let element = this.findProvinceCapital(val.name);
+        let element = this.findProvinceCapital(val.label);
         if (element != null) {
           curAreaName = element.capital;
           this.areaFullName = curAreaName;
         }
       } else if (val.level == "city") {
-        curAreaName = val.name;
+        curAreaName = val.label;
         this.areaFullName = curAreaName;
       } else {
         //除了省会和地级市外，其它地区不予处理

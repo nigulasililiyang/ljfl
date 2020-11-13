@@ -30,6 +30,10 @@ export default {
       type: String,
       default: "100%",
     },
+    color:{
+      type: String,
+      default: "#2081f7",
+    }
   },
   data() {
     return {
@@ -199,7 +203,7 @@ export default {
               normal: {
                 borderColor: "#0d2d82",
                 borderWidth: 1.5,
-                areaColor: "#2081f7",
+                areaColor: this.color,
               },
               emphasis: {
                 borderWidth: 1,
@@ -254,7 +258,7 @@ export default {
               normal: {
                 borderColor: "#0d2d82",
                 borderWidth: 1.5,
-                areaColor: "#2081f7",
+                areaColor: this.color,
               },
               emphasis: {
                 borderWidth: 1,
@@ -283,7 +287,7 @@ export default {
             },
             itemStyle: {
               normal: {
-                areaColor: "#323c48",
+                areaColor:this.color,
                 borderColor: "#111",
               },
               emphasis: {

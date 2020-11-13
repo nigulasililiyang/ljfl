@@ -443,7 +443,7 @@ export default {
   computed: {
     content() {
       if (this.properties) {
-        return this.properties.name + "(" + this.properties.level + ")";
+        return this.properties.label + "(" + this.properties.level + ")";
       }
     },
   },
