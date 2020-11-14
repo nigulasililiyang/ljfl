@@ -49,7 +49,7 @@
             "
             :height="
               properties.level != 'country'
-                ? '625px'
+                ? '563px'
                 : '924px'
             "
             :color.sync="areaColor"
