@@ -85,6 +85,8 @@ export default {
               padding: [0, 0],
             },
           },
+          splitNumber:3,
+          // nameGap:3,
           splitArea: {
             areaStyle: {
               color: ["rgba(0, 0, 0, 0)"],
@@ -95,13 +97,24 @@ export default {
               color: "#3589e4",
             },
           },
+          axisLabel:{
+            show:true,
+            textStyle: {
+              color: "#fff",
+              fontSize:10
+            },
+            formatter: function (value, index) {
+              if(index==0){return ""}
+                return Number(value).toFixed(1);
+            }
+          },
           splitLine: {
             lineStyle: {
-              color: "#3589e4",
+              color: ['#3589e4', '#3589e4','#3589e4','rgba(0, 0, 0, 0)'],
             },
           },
           indicator: indicator,
-          center: ['50%', '60%'],
+          // center: ['50%', '60%'],
           radius: 80
         },
         series: {

@@ -1,13 +1,13 @@
 <template>
   <div
     style="
-      height: 280px;
+      height: 300px;
       display: flex;
       align-items: center;
       justify-content: space-around;
     "
   >
-    <Chart :chartData="radarData" width="320px" height="280px"></Chart>
+    <Chart :chartData="radarData" width="320px" height="300px"></Chart>
     <div style="display: grid">
       <div
         v-for="(data, index) in panelData"
@@ -79,7 +79,7 @@ export default {
           let data = [];
           let dataHZ = [];
           quotaGroups.forEach((element) => {
-            indicator.push({ name: element.quota_group_name });
+            indicator.push({ name: element.quota_group_name,max:element.group_weight });
             data.push(element.score);
             this.panelData.push({
               name: element.quota_group_name,
@@ -90,8 +90,8 @@ export default {
           this.radarData = {
             indicator: indicator,
             data: [
-              { name: "当前选中", value: data },
               { name: "杭州", value: dataHZ },
+              { name: "当前选中", value: data },
             ],
           };
         }
