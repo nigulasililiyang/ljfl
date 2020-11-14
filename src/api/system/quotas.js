@@ -63,3 +63,12 @@ export function changePassword(data) {
     data: data
   })
 }
+
+// 注册
+export function reg(data) {
+  return request({
+    url: '/reg',
+    method: 'post',
+    data: data
+  })
+}

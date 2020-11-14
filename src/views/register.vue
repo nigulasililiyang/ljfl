@@ -112,8 +112,7 @@
 <script>
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from "@/utils/jsencrypt";
-import { selectRecordInfoConfigByKeys } from "@/api/system/config";
-
+import { reg } from "@/api/system/quotas";
 export default {
   name: "Register",
   data() {
@@ -177,26 +176,22 @@ export default {
     },
   },
   created() {
-    // this.getCode();
-    this.selectRecordInfoConfigByKeys();
   },
   methods: {
-    selectRecordInfoConfigByKeys() {
-      selectRecordInfoConfigByKeys().then((response) => {
-        this.recordnoform = response.data;
-      });
-    },
     handleRegister() {
       this.$refs.registerForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          this.$store
-            .dispatch("Login", this.registerForm)
-            .then(() => {
-              this.loading = false;
-              this.$router.push({
-                path: this.redirect || "/",
-              });
+          reg(this.registerForm)
+            .then((response) => {
+              if(response.code == 200){
+                this.loading = false;
+                this.$router.push({
+                  path: this.redirect || "/",
+                });
+              }else{
+                this.msgError(response.message);
+              }
             })
             .catch(() => {
               this.loading = false;

@@ -387,7 +387,7 @@ export default {
             if (response.code === 200) {
               this.msgSuccess("提交成功");
             } else {
-              this.msgError(response.msg);
+              this.msgError(response.message);
             }
           })
           .catch((error) => {});

@@ -149,10 +149,14 @@ export default {
           this.$store
             .dispatch("Login", this.loginForm)
             .then(() => {
-              this.loading = false;
-              this.$router.push({
-                path: this.redirect || "/",
-              });
+              //if(response.code == 200){
+                this.loading = false;
+                this.$router.push({
+                  path: this.redirect || "/",
+                });
+              //}else{
+              //  this.msgError(response.message);
+              //}
             })
             .catch(() => {
               this.loading = false;

@@ -249,8 +249,17 @@ export default {
       return suggestions;
     },
     areaColor(){
-        let color=(this.areaInfo.classify_name=='四分法'?'green':(areaInfo.classify_name=='三分法'?'yellow':(areaInfo.classify_name=='二分法'?'orangered':'#2081f7')));
-        return color;
+      if(this.areaInfo == null || this.areaInfo.classify_name == null){
+        return '#2081f7';
+      }else if(this.areaInfo.classify_name=='四分法'){
+        return 'green';
+      }else if(areaInfo.classify_name=='三分法'){
+        return 'yellow';
+      }else if(areaInfo.classify_name=='二分法'){
+        return 'orangered';
+      }else{
+        return '#2081f7';
+      }
     }
   },
   data() {
@@ -329,38 +338,38 @@ export default {
       },
       //省会列表
       capitalList: [
-        { province: "北京市", capital: "北京" },
-        { province: "上海市", capital: "上海" },
-        { province: "天津市", capital: "天津" },
-        { province: "重庆市", capital: "重庆" },
-        { province: "黑龙江省", capital: "哈尔滨" },
-        { province: "吉林省", capital: "长春" },
-        { province: "辽宁省", capital: "沈阳" },
+        { province: "北京", capital: "北京" },
+        { province: "上海", capital: "上海" },
+        { province: "天津", capital: "天津" },
+        { province: "重庆", capital: "重庆" },
+        { province: "黑龙江", capital: "哈尔滨" },
+        { province: "吉林", capital: "长春" },
+        { province: "辽宁", capital: "沈阳" },
         { province: "内蒙古", capital: "呼和浩特" },
-        { province: "河北省", capital: "石家庄" },
+        { province: "河北", capital: "石家庄" },
         { province: "新疆", capital: "乌鲁木齐" },
-        { province: "甘肃省", capital: "兰州" },
-        { province: "青海省", capital: "西宁" },
-        { province: "陕西省", capital: "西安" },
+        { province: "甘肃", capital: "兰州" },
+        { province: "青海", capital: "西宁" },
+        { province: "陕西", capital: "西安" },
         { province: "宁夏", capital: "银川" },
-        { province: "河南省", capital: "郑州" },
-        { province: "山东省", capital: "济南" },
-        { province: "山西省", capital: "太原" },
-        { province: "安徽省", capital: "合肥" },
-        { province: "湖北省", capital: "武汉" },
-        { province: "湖南省", capital: "长沙" },
-        { province: "江苏省", capital: "南京" },
-        { province: "四川省", capital: "成都" },
-        { province: "贵州省", capital: "贵阳" },
-        { province: "云南省", capital: "昆明" },
-        { province: "广西省", capital: "南宁" },
+        { province: "河南", capital: "郑州" },
+        { province: "山东", capital: "济南" },
+        { province: "山西", capital: "太原" },
+        { province: "安徽", capital: "合肥" },
+        { province: "湖北", capital: "武汉" },
+        { province: "湖南", capital: "长沙" },
+        { province: "江苏", capital: "南京" },
+        { province: "四川", capital: "成都" },
+        { province: "贵州", capital: "贵阳" },
+        { province: "云南", capital: "昆明" },
+        { province: "广西", capital: "南宁" },
         { province: "西藏", capital: "拉萨" },
-        { province: "浙江省", capital: "杭州" },
-        { province: "江西省", capital: "南昌" },
-        { province: "广东省", capital: "广州" },
-        { province: "福建省", capital: "福州" },
-        { province: "台湾省", capital: "台北" },
-        { province: "海南省", capital: "海口" },
+        { province: "浙江", capital: "杭州" },
+        { province: "江西", capital: "南昌" },
+        { province: "广东", capital: "广州" },
+        { province: "福建", capital: "福州" },
+        { province: "台湾", capital: "台北" },
+        { province: "海南", capital: "海口" },
         { province: "香港", capital: "香港" },
         { province: "澳门", capital: "澳门" },
       ],
@@ -442,6 +451,16 @@ export default {
       });
       return provinceCapital;
     },
+    getQuotaValue(quota){
+      if(quota == null){
+        return "";
+      }
+      if(quota.quota_value == null){
+        return "";
+      }
+
+      return quota.quota_value;
+    },
     //获取区域的详细信息
     getAreaDetail() {
       //获取区域基本信息
@@ -473,7 +492,7 @@ export default {
           let recoveryGarbage = this.findQuestionByTag("recovery_recovered");
           let recovery = {
             title: "可回收垃圾",
-            value: recoveryGarbage.quota_value,
+            value: this.getQuotaValue(recoveryGarbage),
             icon: "recyclable-garbage.png",
           };
           this.realtimeData.push(recovery);
@@ -482,7 +501,7 @@ export default {
           );
           let kitchen = {
             title: "厨余垃圾",
-            value: kitchenGarbage.quota_value,
+            value: this.getQuotaValue(kitchenGarbage),
             icon: "kitchen-garbage.png",
           };
           this.realtimeData.push(kitchen);
@@ -491,7 +510,7 @@ export default {
           );
           let harmful = {
             title: "有害垃圾",
-            value: harmfulGarbage.quota_value,
+            value: this.getQuotaValue(harmfulGarbage),
             icon: "harmful-garbage.png",
           };
           this.realtimeData.push(harmful);
