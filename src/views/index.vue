@@ -49,10 +49,11 @@
             "
             :height="
               properties.level != 'country'
-                ? '563px'
+                ? '526px'
                 : '924px'
             "
             :color.sync="areaColor"
+            :recordTime="areaInfo.record_time"
             @changeLevel="changeLevel"
           />
         </div>
@@ -544,6 +545,7 @@ export default {
         let params = {
           areaName: curAreaName,
         };
+        console.log("aaaaa===",params);
         getAreaByName(params).then((response) => {
           if (response.code == 200) {
             this.areaInfo = response.areaInfo;

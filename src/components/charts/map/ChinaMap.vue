@@ -1,7 +1,10 @@
 <template>
   <div>
     <el-row type="flex" justify="space-between" align="center">
-      <div>当前地图范围：{{ currentArea }}（{{ level }}）</div>
+      <div>
+        <p>当前地图范围：{{ currentArea }}（{{ level }}）</p>
+        <p v-if="checked2">更新时间：{{ recordTimeFormate }}</p>
+      </div>
       <div v-if="level != 'country'">
         <el-checkbox
           v-model="checked1"
@@ -50,6 +53,20 @@ export default {
       type: String,
       default: "#2081f7",
     },
+    recordTime: {
+      type: String,
+      default: "",
+    },
+  },
+  computed: {
+    recordTimeFormate() {
+      if (this.recordTime != "") {
+        return this.$moment(new Date(this.recordTime * 1000)).format(
+          "YYYY-MM-DD HH:MM:SS"
+        );
+      }
+      return "暂无更新时间";
+    },
   },
   data() {
     return {
@@ -65,8 +82,8 @@ export default {
         label: "全国", //中文名
         name: "china", //拼音
       },
-      checked1:undefined,//显示已评价区域
-      checked2:undefined//显示更新时间
+      checked1: undefined, //显示已评价区域
+      checked2: undefined, //显示更新时间
     };
   },
   beforeUpdate() {
