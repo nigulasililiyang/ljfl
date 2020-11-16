@@ -397,7 +397,7 @@ export default {
   methods: {
     handleRow({ row, rowIndex }) {
       let present = Number(row.quota_weight).toFixed(4) * 100;
-      console.log(present);
+      // console.log(present);
       return {
         background:
           "linear-gradient(to right,#00a0e9 " +

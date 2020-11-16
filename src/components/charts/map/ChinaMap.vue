@@ -36,9 +36,11 @@
 import echarts from "echarts";
 import $ from "jquery";
 import "echarts/lib/component/geo";
+import { getAreaByName } from "@/api/system/quotas";
 var myChart = null;
 const chinaJson = require("echarts/map/json/china.json");
 const provinceMap = require("./province.json");
+import axios from "axios";
 export default {
   props: {
     width: {
@@ -86,28 +88,58 @@ export default {
       checked2: undefined, //显示更新时间
     };
   },
-  beforeUpdate() {
-    myChart.resize();
-  },
   mounted() {
     this.showChina();
   },
-  watch: {
-    geoJson: {
-      handler(val) {
-        this.resetChildren();
-      },
-    },
-  },
   methods: {
     resetChildren() {
-      let data = [];
-      this.geoJson.features.forEach((element) => {
-        data.push({ name: element.properties.name, value: "0" });
+      return new Promise((resolve) => {
+        let children = [];
+        let promises = [];
+        this.geoJson.features.forEach((element) => {
+          let params = {
+            areaName: element.properties.name,
+          };
+          promises.push(getAreaByName(params));
+        });
+        axios.all(promises).then((res) => {
+          res.forEach((ele, index) => {
+            let properties = this.geoJson.features[index].properties;
+            if (ele) {
+              let areaInfo = ele.areaInfo;
+              children.push({
+                name: properties.name,
+                itemStyle: {
+                  areaColor: areaInfo.classify_name
+                    ? areaInfo.classify_name == "四分法"
+                      ? "green"
+                      : areaInfo.classify_name == "三分法"
+                      ? "yellow"
+                      : areaInfo.classify_name == "二分法"
+                      ? "orangered"
+                      : "#2081f7"
+                    : "#2081f7",
+                },
+              });
+            } else {
+              children.push({
+                name: properties.name,
+                // value: "0",
+                itemStyle: {
+                  areaColor: "#2081f7",
+                },
+              });
+            }
+          });
+          this.children = children;
+          resolve();
+        });
       });
-      this.children = data;
     },
-    showProvince(param) {
+    async showProvince(param) {
+      if (myChart != null) {
+        myChart.dispose();
+      }
       let properties = {
         level: "province",
         name: provinceMap[param.name],
@@ -116,16 +148,15 @@ export default {
       let _this = this;
       _this.province = param.name;
       _this.$emit("changeLevel", properties);
+      _this.level = properties.level;
+      _this.currentArea = properties.label;
+      _this.currentAreaPingYin = properties.name;
+
+      _this.geoJson = require("echarts/map/json/province/" +
+        properties.name +
+        ".json");
+      await _this.resetChildren();
       _this.$nextTick(() => {
-        if (myChart != null) {
-          myChart.dispose();
-        }
-        _this.level = properties.level;
-        _this.currentArea = properties.label;
-        _this.currentAreaPingYin = properties.name;
-        _this.geoJson = require("echarts/map/json/province/" +
-          properties.name +
-          ".json");
         echarts.registerMap(_this.currentAreaPingYin, _this.geoJson);
         myChart = echarts.init(_this.$refs.myEchart);
         window.onresize = myChart.resize;
@@ -145,9 +176,9 @@ export default {
       _this.$emit("changeLevel", cityProperties);
       _this.$nextTick(() => {
         _this.children.forEach((ele, index) => {
-          _this.children[index].value = "0";
+          _this.children[index].selected = false;
           if (cityProperties.label == ele.name) {
-            _this.children[index].value = "1";
+            _this.children[index].selected = true;
           }
         });
         _this.level = cityProperties.level;
@@ -156,19 +187,18 @@ export default {
         myChart.setOption(_this.getProvinceOption(provinceMap[_this.province]));
       });
     },
-
-    showChina() {
+    async showChina() {
       let _this = this;
       let properties = _this.chinaProperties;
       _this.$emit("changeLevel", properties);
+      _this.level = properties.level;
+      _this.currentArea = properties.label;
+      _this.currentAreaPingYin = properties.name;
+      _this.geoJson = chinaJson;
       _this.$nextTick(() => {
         if (myChart != null) {
           myChart.dispose();
         }
-        _this.level = properties.level;
-        _this.currentArea = properties.label;
-        _this.currentAreaPingYin = properties.name;
-        _this.geoJson = chinaJson;
         echarts.registerMap(_this.currentAreaPingYin, _this.geoJson);
         myChart = echarts.init(_this.$refs.myEchart);
         window.onresize = myChart.resize;
@@ -178,9 +208,8 @@ export default {
         });
       });
     },
-    backToParent() {
+    async backToParent() {
       if (this.level == "city") {
-        this.resetChildren();
         this.showProvince({ name: this.province });
       } else if (this.level == "province") {
         this.showChina();
@@ -238,7 +267,7 @@ export default {
               normal: {
                 borderColor: "#0d2d82",
                 borderWidth: 1.5,
-                areaColor: this.color,
+                areaColor: "#2081f7",
               },
               emphasis: {
                 borderWidth: 1,
@@ -275,34 +304,6 @@ export default {
     },
     getProvinceOption(pinyin) {
       var option = {
-        visualMap: {
-          show: false,
-          left: "right",
-          categories: ["1"],
-          inRange: {
-            color: ["#f46d43"],
-          },
-          text: ["High", "Low"], // 文本，默认为数值文本
-          calculable: true,
-        },
-        geo: [
-          {
-            map: pinyin, // 表示中国地图
-            roam: false,
-            zoom: 1.25,
-            itemStyle: {
-              normal: {
-                borderColor: "#0d2d82",
-                borderWidth: 1.5,
-                areaColor: this.color,
-              },
-              emphasis: {
-                borderWidth: 1,
-                shadowColor: "#000a7d",
-              },
-            },
-          },
-        ],
         series: [
           {
             type: "map",
@@ -323,7 +324,7 @@ export default {
             },
             itemStyle: {
               normal: {
-                areaColor: this.color,
+                // areaColor:"",
                 borderColor: "#111",
               },
               emphasis: {
