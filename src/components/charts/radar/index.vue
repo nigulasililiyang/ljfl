@@ -30,7 +30,7 @@ export default {
     areaTag: {
       type: String,
       required: true,
-    },
+    }
   },
   data() {
     return {
@@ -49,6 +49,7 @@ export default {
         ],
       },
       panelData: [],
+      properties:undefined
     };
   },
   created() {
@@ -63,6 +64,7 @@ export default {
   methods: {
     //获取分类指标
     getQuotaGroups() {
+      this.changeAreaName();
       if (this.areaTag.length == 0) {
         return;
       }
@@ -87,16 +89,20 @@ export default {
             });
             dataHZ.push(element.hz_score);
           });
+          
           this.radarData = {
             indicator: indicator,
             data: [
               { name: "杭州", value: dataHZ },
-              { name: "当前选中", value: data },
+              { name: this.properties.label, value: data },
             ],
           };
         }
       });
     },
+    changeAreaName(){
+     this.properties = JSON.parse(sessionStorage.getItem("properties"));
+    }
   },
 };
 </script>

@@ -30,7 +30,7 @@
               </div>
             </div>
             <div class="sub-title">各类指标得分情况:</div>
-            <Radar :areaTag="queryForm.areaTag" />
+            <Radar :areaTag.sync="queryForm.areaTag"/>
           </div>
         </div>
       </el-col>
