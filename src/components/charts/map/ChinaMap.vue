@@ -11,6 +11,7 @@
           label="显示已评价区域"
           border
           size="mini"
+          @change="change"
         ></el-checkbox>
         <el-checkbox
           v-model="checked2"
@@ -92,6 +93,27 @@ export default {
     this.showChina();
   },
   methods: {
+    change(checked) {
+      if (checked) {
+        console.log("xuanzhong");
+        this.children.forEach((child, index) => {
+          if (child.questionStatus != "1") {
+            this.children[index].value = 1;
+          } else {
+            this.children[index].value = undefined;
+          }
+        });
+      } else {
+        this.children.forEach((child, index) => {
+          this.children[index].value = undefined;
+        });
+      }
+      if (this.level == "province") {
+        myChart.setOption(this.getProvinceOption(this.currentAreaPingYin));
+      } else {
+        myChart.setOption(this.getProvinceOption(provinceMap[this.province]));
+      }
+    },
     resetChildren() {
       return new Promise((resolve) => {
         let children = [];
@@ -109,6 +131,7 @@ export default {
               let areaInfo = ele.areaInfo;
               children.push({
                 name: properties.name,
+                questionStatus: areaInfo.question_status,
                 itemStyle: {
                   areaColor: areaInfo.classify_name
                     ? areaInfo.classify_name == "四分法"
@@ -304,6 +327,11 @@ export default {
     },
     getProvinceOption(pinyin) {
       var option = {
+        visualMap: {
+          show: false,
+          type: "piecewise",
+          pieces: [{ value: 1, color: "grey" }],
+        },
         series: [
           {
             type: "map",
