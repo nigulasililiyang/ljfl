@@ -25,7 +25,7 @@
                 />
                 <div>
                   <p>{{ data.title }}</p>
-                  <p>{{ data.value }}</p>
+                  <p>{{ data.value }} {{data.unit}}</p>
                 </div>
               </div>
             </div>
@@ -280,16 +280,19 @@ export default {
           title: "可回收垃圾",
           value: 45631,
           icon: "recyclable-garbage.png",
+          unit: "吨/天"
         },
         {
           title: "厨余垃圾",
           value: 45631,
           icon: "kitchen-garbage.png",
+          unit: "吨/天"
         },
         {
           title: "有害垃圾",
           value: 45631,
           icon: "harmful-garbage.png",
+          unit: "吨/天"
         },
       ],
       bottomItemList: [
@@ -495,6 +498,7 @@ export default {
             title: "可回收垃圾",
             value: this.getQuotaValue(recoveryGarbage),
             icon: "recyclable-garbage.png",
+            unit: recoveryGarbage.quota_unit == null ? "吨/天" : recoveryGarbage.quota_unit
           };
           this.realtimeData.push(recovery);
           let kitchenGarbage = this.findQuestionByTag(
@@ -504,6 +508,7 @@ export default {
             title: "厨余垃圾",
             value: this.getQuotaValue(kitchenGarbage),
             icon: "kitchen-garbage.png",
+            unit: kitchenGarbage.quota_unit == null ? "吨/天" : kitchenGarbage.quota_unit
           };
           this.realtimeData.push(kitchen);
           let harmfulGarbage = this.findQuestionByTag(
@@ -513,6 +518,7 @@ export default {
             title: "有害垃圾",
             value: this.getQuotaValue(harmfulGarbage),
             icon: "harmful-garbage.png",
+            unit: harmfulGarbage.quota_unit == null ? "吨/天" : harmfulGarbage.quota_unit
           };
           this.realtimeData.push(harmful);
         }
