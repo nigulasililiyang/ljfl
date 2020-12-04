@@ -254,9 +254,9 @@ export default {
         return '#2081f7';
       }else if(this.areaInfo.classify_name=='四分法'){
         return 'green';
-      }else if(areaInfo.classify_name=='三分法'){
+      }else if(this.areaInfo.classify_name=='三分法'){
         return 'yellow';
-      }else if(areaInfo.classify_name=='二分法'){
+      }else if(this.areaInfo.classify_name=='二分法'){
         return 'orangered';
       }else{
         return '#2081f7';

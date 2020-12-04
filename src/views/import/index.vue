@@ -361,7 +361,9 @@ export default {
           value: "0",
         },
       ],
-      areaInfo: undefined,
+      areaInfo: {
+        name:""
+      },
       queryForm: {
         areaTag: "",
       },
