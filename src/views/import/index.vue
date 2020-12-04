@@ -5,6 +5,34 @@
     <el-row type="flex" justify="center">
       <el-card style="width:70%">
         <el-form
+          size="small"
+          label-position="left"
+          label-width="400px"
+        >
+
+            <div class="form-group-title">地区属性</div>
+            <div class="form-group-content">
+              <el-form-item
+                label="是否已实现垃圾分类"
+              >
+                <el-radio-group
+                  v-model="areaInfo.classify_type"
+                  size="medium"
+                   @change="handleChangeClassifyType"
+                >
+                  <el-radio
+                    v-for="(item, index) in fieldOptions"
+                    :key="index"
+                    :label="item.value"
+                    :disabled="item.disabled"
+                    >{{ item.label }}</el-radio
+                  >
+                </el-radio-group>
+              </el-form-item>
+            </div>
+
+        </el-form>
+        <el-form
           ref="elForm"
           :model="formData"
           :rules="rules"
@@ -55,7 +83,7 @@
   </div>
 </template>
 <script>
-import { addAnswer } from "@/api/system/quotas";
+import { addAnswer,changeAreaClassifyType } from "@/api/system/quotas";
 import {
   getAreaByName,
   listQuotaGroups,
@@ -379,6 +407,18 @@ export default {
   methods: {
     goBack() {
       this.$router.push("/");
+    },
+    handleChangeClassifyType(value){
+      let queryParam = {
+        classifyType:value
+      };
+      changeAreaClassifyType(queryParam).then(response=>{
+        if(response.code == 200){
+          this.msgSuccess("修改成功");
+        }else{
+          this.msgError(response.message);
+        }
+      })
     },
     submitForm() {
       this.$refs["elForm"].validate((valid) => {

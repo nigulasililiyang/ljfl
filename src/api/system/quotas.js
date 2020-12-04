@@ -72,3 +72,12 @@ export function reg(data) {
     data: data
   })
 }
+
+// 修正地区垃圾分类的类型
+export function changeAreaClassifyType(query) {
+  return request({
+    url: '/changeAreaClassifyType',
+    method: 'get',
+    params: query
+  })
+}
