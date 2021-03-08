@@ -127,12 +127,13 @@
                   label="得分"
                   prop="score"
                   align="center"
-                  width="50px"
+                  show-overflow-tooltip
                 />
                 <el-table-column
                   label="权重"
                   prop="quota_weight"
                   align="center"
+                  show-overflow-tooltip
                 >
                   <template slot-scope="scope">
                     <div style="color: #37d7ff">

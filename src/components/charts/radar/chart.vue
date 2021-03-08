@@ -83,6 +83,7 @@ export default {
             textStyle: {
               color: "#fff",
               padding: [0, 0],
+              fontSize:15
             },
           },
           splitNumber:3,
@@ -101,7 +102,7 @@ export default {
             show:true,
             textStyle: {
               color: "#fff",
-              fontSize:10
+              fontSize:12
             },
             formatter: function (value, index) {
               if(index==0){return ""}

@@ -283,7 +283,7 @@ export default {
                 show: true, // 是否显示对应地名
                 textStyle: {
                   color: "#ffffff",
-                  fontSize:16
+                  fontSize:20
                 },
               },
             },
@@ -344,10 +344,11 @@ export default {
               normal: {
                 show: true,
                 color: "#fff",
+                fontSize: 20,
               },
               emphasis: {
                 show: true,
-                fontSize: 16,
+                fontSize: 20,
                 color: "#fff",
               },
             },

@@ -8,7 +8,7 @@
       justify-content: space-around;
     "
   >
-    <Chart :chartData="radarData" width="320px" height="300px"></Chart>
+    <Chart :chartData="radarData" width="350px" height="300px"></Chart>
     <div style="display: grid">
       <div
         v-for="(data, index) in panelData"
@@ -83,7 +83,13 @@ export default {
           let dataHZ = [];
           quotaGroups.forEach((element) => {
             indicator.push({ name: element.quota_group_name,max:element.group_weight });
-            data.push(element.score);
+            //数值超过最大值时，取最大值
+            if(Number.parseFloat((element.score))>Number.parseFloat(element.group_weight)){
+              data.push(element.group_weight);
+            }
+            else{
+              data.push(element.score);
+            }
             this.panelData.push({
               name: element.quota_group_name,
               value: element.score,
