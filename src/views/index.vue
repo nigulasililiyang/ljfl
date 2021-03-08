@@ -25,40 +25,34 @@
                 />
                 <div>
                   <p>{{ data.title }}</p>
-                  <p>{{ data.value }} {{data.unit}}</p>
+                  <p>{{ data.value }} {{ data.unit }}</p>
                 </div>
               </div>
             </div>
             <div class="sub-title">各类指标得分情况:</div>
-            <Radar :areaTag.sync="queryForm.areaTag"/>
+            <Radar :areaTag.sync="queryForm.areaTag" />
           </div>
         </div>
       </el-col>
       <el-col
-        :span="
-          properties.level != 'country' ? 8 : 24
-        "
+        :span="properties.level != 'country' ? 8 : 24"
         class="inline x-flex-center"
       >
         <div class="center">
           <china-map
-            :width="
-              properties.level != 'country'
-                ? '625px'
-                : '1920px'
-            "
-            :height="
-              properties.level != 'country'
-                ? '526px'
-                : '924px'
-            "
+            :width="properties.level != 'country' ? '625px' : '1920px'"
+            :height="properties.level != 'country' ? '526px' : '924px'"
             :color.sync="areaColor"
             :recordTime="areaInfo.record_time"
             @changeLevel="changeLevel"
           />
         </div>
       </el-col>
-      <el-col :span="8" class="inline x-flex-center" v-show="properties.level != 'country'">
+      <el-col
+        :span="8"
+        class="inline x-flex-center"
+        v-show="properties.level != 'country'"
+      >
         <div class="item">
           <div class="inline x-flex-center y-flex-center">
             <div class="right-another"></div>
@@ -250,19 +244,19 @@ export default {
       });
       return suggestions;
     },
-    areaColor(){
-      if(this.areaInfo == null || this.areaInfo.classify_name == null){
-        return '#2081f7';
-      }else if(this.areaInfo.classify_name=='四分法'){
-        return 'green';
-      }else if(this.areaInfo.classify_name=='三分法'){
-        return 'yellow';
-      }else if(this.areaInfo.classify_name=='二分法'){
-        return 'orangered';
-      }else{
-        return '#2081f7';
+    areaColor() {
+      if (this.areaInfo == null || this.areaInfo.classify_name == null) {
+        return "#2081f7";
+      } else if (this.areaInfo.classify_name == "四分法") {
+        return "green";
+      } else if (this.areaInfo.classify_name == "三分法") {
+        return "yellow";
+      } else if (this.areaInfo.classify_name == "二分法") {
+        return "orangered";
+      } else {
+        return "#2081f7";
       }
-    }
+    },
   },
   data() {
     return {
@@ -281,19 +275,19 @@ export default {
           title: "可回收垃圾",
           value: 45631,
           icon: "recyclable-garbage.png",
-          unit: "吨/天"
+          unit: "吨/天",
         },
         {
           title: "厨余垃圾",
           value: 45631,
           icon: "kitchen-garbage.png",
-          unit: "吨/天"
+          unit: "吨/天",
         },
         {
           title: "有害垃圾",
           value: 45631,
           icon: "harmful-garbage.png",
-          unit: "吨/天"
+          unit: "吨/天",
         },
       ],
       bottomItemList: [
@@ -456,11 +450,11 @@ export default {
       });
       return provinceCapital;
     },
-    getQuotaValue(quota){
-      if(quota == null){
+    getQuotaValue(quota) {
+      if (quota == null) {
         return "";
       }
-      if(quota.quota_value == null){
+      if (quota.quota_value == null) {
         return "";
       }
 
@@ -495,33 +489,50 @@ export default {
         if (response.code == 200) {
           this.questions = response.questions;
           let recoveryGarbage = this.findQuestionByTag("recovery_recovered");
-          let recovery = {
-            title: "可回收垃圾",
-            value: this.getQuotaValue(recoveryGarbage),
-            icon: "recyclable-garbage.png",
-            unit: recoveryGarbage.quota_unit == null ? "吨/天" : recoveryGarbage.quota_unit
-          };
-          this.realtimeData.push(recovery);
+          if (recoveryGarbage) {
+            let recovery = {
+              title: "可回收垃圾",
+              value: this.getQuotaValue(recoveryGarbage),
+              icon: "recyclable-garbage.png",
+              unit:
+                recoveryGarbage.quota_unit == null
+                  ? "吨/天"
+                  : recoveryGarbage.quota_unit,
+            };
+            this.realtimeData.push(recovery);
+          }
+
           let kitchenGarbage = this.findQuestionByTag(
             "real_kitchen_waste_deal"
           );
-          let kitchen = {
-            title: "厨余垃圾",
-            value: this.getQuotaValue(kitchenGarbage),
-            icon: "kitchen-garbage.png",
-            unit: kitchenGarbage.quota_unit == null ? "吨/天" : kitchenGarbage.quota_unit
-          };
-          this.realtimeData.push(kitchen);
+          if (kitchenGarbage) {
+            let kitchen = {
+              title: "厨余垃圾",
+              value: this.getQuotaValue(kitchenGarbage),
+              icon: "kitchen-garbage.png",
+              unit:
+                kitchenGarbage.quota_unit == null
+                  ? "吨/天"
+                  : kitchenGarbage.quota_unit,
+            };
+            this.realtimeData.push(kitchen);
+          }
+
           let harmfulGarbage = this.findQuestionByTag(
             "real_harmful_waste_deal"
           );
-          let harmful = {
-            title: "有害垃圾",
-            value: this.getQuotaValue(harmfulGarbage),
-            icon: "harmful-garbage.png",
-            unit: harmfulGarbage.quota_unit == null ? "吨/天" : harmfulGarbage.quota_unit
-          };
-          this.realtimeData.push(harmful);
+          if (harmfulGarbage) {
+            let harmful = {
+              title: "有害垃圾",
+              value: this.getQuotaValue(harmfulGarbage),
+              icon: "harmful-garbage.png",
+              unit:
+                harmfulGarbage.quota_unit == null
+                  ? "吨/天"
+                  : harmfulGarbage.quota_unit,
+            };
+            this.realtimeData.push(harmful);
+          }
         }
       });
     },
@@ -552,7 +563,7 @@ export default {
         let params = {
           areaName: curAreaName,
         };
-        console.log("aaaaa===",params);
+        console.log("aaaaa===", params);
         getAreaByName(params).then((response) => {
           if (response.code == 200) {
             this.areaInfo = response.areaInfo;
