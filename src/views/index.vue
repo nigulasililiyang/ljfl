@@ -610,6 +610,7 @@ export default {
     .realtime {
       width: 470px;
       height: 143px;
+      font-size: 16px;
     }
   }
   .center {
@@ -645,6 +646,7 @@ export default {
     line-height: 34px;
     font-family: STHeitiJ-Light;
     padding: 0 15px;
+    font-size: 18px;
   }
 }
 .bottom-left-bg {
@@ -723,6 +725,7 @@ export default {
 .cellbox {
   .cell {
     background: #283e7b !important;
+    font-size: 16px;
   }
 }
 </style>

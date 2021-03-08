@@ -496,6 +496,7 @@ export default {
   line-height: 36px;
   background: #499dff;
   padding: 0 10px;
+  font-size:18px;
 }
 .form-group-content {
   padding: 20px;
@@ -504,5 +505,6 @@ export default {
 .el-form-item {
   margin-right: 20px;
   display: flex;
+  font-size:16px;
 }
 </style>

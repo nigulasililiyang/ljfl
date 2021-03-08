@@ -2,6 +2,7 @@
   <div
     style="
       height: 300px;
+      font-size:16px;
       display: flex;
       align-items: center;
       justify-content: space-around;
