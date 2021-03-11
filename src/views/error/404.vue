@@ -210,7 +210,7 @@ export default {
       text-align: center;
       color: #ffffff;
       opacity: 0;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 36px;
       cursor: pointer;
       animation-name: slideUp;

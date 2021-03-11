@@ -83,7 +83,7 @@
           style="height: 30px"
         >
           <router-link to="/login">
-            <el-link style="color: #00e5ff; font-size: 12px"
+            <el-link style="color: #00e5ff; font-size: 14px"
               >立即登录</el-link
             ></router-link
           >

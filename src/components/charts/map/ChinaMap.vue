@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row type="flex" justify="space-between" align="center">
-      <div>
+      <div style="padding-left:20px;">
         <p>当前地图范围：{{ currentArea }}（{{ level }}）</p>
         <p v-if="checked2">更新时间：{{ recordTimeFormate }}</p>
       </div>
@@ -10,19 +10,19 @@
           v-model="checked1"
           label="显示已评价区域"
           border
-          size="mini"
+          size="medium"
           @change="change"
         ></el-checkbox>
         <el-checkbox
           v-model="checked2"
           label="显示更新时间"
           border
-          size="mini"
+          size="medium"
         ></el-checkbox>
       </div>
     </el-row>
     <el-row v-if="level != 'country'">
-      <el-button v-if="level != 'country'" @click="backToParent()" type="text"
+      <el-button v-if="level != 'country'" @click="backToParent()" type="text" size="medium"
         >返回上一层</el-button
       >
     </el-row>

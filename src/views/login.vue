@@ -42,7 +42,7 @@
             >记住密码</el-checkbox
           >
           <router-link to="/register"
-            ><el-link style="color: #00e5ff; font-size: 12px;line-height:26px"
+            ><el-link style="color: #00e5ff; font-size: 14px;line-height:26px"
               >立即注册</el-link
             ></router-link
           >
@@ -205,6 +205,7 @@ export default {
       }
 
       .el-input__inner {
+        font-size: 16px;
         height: 48px;
         border: none;
         padding-left: 46px;

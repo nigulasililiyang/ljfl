@@ -3,34 +3,26 @@
     <el-page-header title="重新选择" @back="goBack" :content="areaInfo.name">
     </el-page-header>
     <el-row type="flex" justify="center">
-      <el-card style="width:70%">
-        <el-form
-          size="small"
-          label-position="left"
-          label-width="400px"
-        >
-
-            <div class="form-group-title">地区属性</div>
-            <div class="form-group-content">
-              <el-form-item
-                label="是否已实现垃圾分类"
+      <el-card style="width: 70%">
+        <el-form size="small" label-position="left" label-width="400px">
+          <div class="form-group-title">地区属性</div>
+          <div class="form-group-content">
+            <el-form-item label="是否已实现垃圾分类">
+              <el-radio-group
+                v-model="areaInfo.classify_type"
+                size="medium"
+                @change="handleChangeClassifyType"
               >
-                <el-radio-group
-                  v-model="areaInfo.classify_type"
-                  size="medium"
-                   @change="handleChangeClassifyType"
+                <el-radio
+                  v-for="(item, index) in fieldOptions"
+                  :key="index"
+                  :label="item.value"
+                  :disabled="item.disabled"
+                  >{{ item.label }}</el-radio
                 >
-                  <el-radio
-                    v-for="(item, index) in fieldOptions"
-                    :key="index"
-                    :label="item.value"
-                    :disabled="item.disabled"
-                    >{{ item.label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-            </div>
-
+              </el-radio-group>
+            </el-form-item>
+          </div>
         </el-form>
         <el-form
           ref="elForm"
@@ -39,15 +31,16 @@
           label-position="left"
           label-width="400px"
         >
-          <div v-for="group in quotaGroups" :key="group.quota_group_id" >
+          <div v-for="group in quotaGroups" :key="group.quota_group_id">
             <div class="form-group-title">{{ group.quota_group_name }}</div>
             <div class="form-group-content">
               <el-form-item
-                v-for="(question,index) in questionListGroup[group.quota_group_id]"
+                v-for="(question, index) in questionListGroup[group.quota_group_id]"
                 :key="question.quota_id"
-                :label="(index+1)+'、'+question.quota_name"
+                :label="index + 1 + '、' + question.quota_name"
                 :prop="question.quota_tag"
               >
+               <div style="display: inline-flex;" slot>
                 <el-input
                   v-if="question.quota_type == 1"
                   v-model="formData[question.quota_tag]"
@@ -67,14 +60,17 @@
                     >{{ item.label }}</el-radio
                   >
                 </el-radio-group>
+                <div class="form-group-unit" v-if="question.quota_unit">{{ question.quota_unit }}</div>
+                </div>
               </el-form-item>
             </div>
           </div>
           <el-row :gutter="20" type="flex" justify="center">
-          <el-form-item size="large" label-width="0px">
+            <el-form-item size="large" label-width="0px">
               <el-button type="primary" @click="submitForm">提交</el-button>
               <el-button @click="resetForm">重置</el-button>
-          </el-form-item>
+               <el-button @click="goBack">返回</el-button>
+            </el-form-item>
           </el-row>
         </el-form>
       </el-card>
@@ -82,12 +78,12 @@
   </div>
 </template>
 <script>
-import { addAnswer,changeAreaClassifyType } from "@/api/system/quotas";
+import { addAnswer, changeAreaClassifyType } from "@/api/system/quotas";
 import {
   getAreaByName,
   listQuotaGroups,
   listQuestions,
-  getAreaInfo
+  getAreaInfo,
 } from "@/api/system/quotas";
 
 export default {
@@ -106,7 +102,7 @@ export default {
         },
       ],
       areaInfo: {
-        name:""
+        name: "",
       },
       queryForm: {
         areaTag: "",
@@ -124,17 +120,17 @@ export default {
     goBack() {
       this.$router.push("/");
     },
-    handleChangeClassifyType(value){
+    handleChangeClassifyType(value) {
       let queryParam = {
-        classifyType:value
+        classifyType: value,
       };
-      changeAreaClassifyType(queryParam).then(response=>{
-        if(response.code == 200){
+      changeAreaClassifyType(queryParam).then((response) => {
+        if (response.code == 200) {
           this.msgSuccess("修改成功");
-        }else{
+        } else {
           this.msgError(response.message);
         }
-      })
+      });
     },
     submitForm() {
       this.$refs["elForm"].validate((valid) => {
@@ -170,7 +166,7 @@ export default {
                 if (res.code == 200) {
                   this.questionList = res.questions;
                   this.setDefaultFormData();
-                  this.questionListGroup = this.groupByGroups(res.questions); 
+                  this.questionListGroup = this.groupByGroups(res.questions);
                   console.log(this.questionListGroup);
                 }
               });
@@ -191,15 +187,15 @@ export default {
       }
       return map;
     },
-    setDefaultFormData(){
-      let data={};
-      this.questionList.forEach(ele => {
-        let key=ele.quota_tag;
-        data[key]=ele.quota_value;
+    setDefaultFormData() {
+      let data = {};
+      this.questionList.forEach((ele) => {
+        let key = ele.quota_tag;
+        data[key] = ele.quota_value;
         console.log(this.formData);
       });
-      this.formData=data;
-    }
+      this.formData = data;
+    },
   },
   computed: {
     content() {
@@ -215,15 +211,19 @@ export default {
   line-height: 36px;
   background: #499dff;
   padding: 0 10px;
-  font-size:18px;
+  font-size: 18px;
 }
 .form-group-content {
   padding: 20px;
   /* display: flex; */
 }
+.form-group-unit {
+  width: 100px;
+  padding: 0 10px;
+}
 .el-form-item {
   margin-right: 20px;
   display: flex;
-  font-size:16px;
+  font-size: 16px;
 }
 </style>

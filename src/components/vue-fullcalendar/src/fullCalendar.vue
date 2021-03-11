@@ -359,7 +359,7 @@
     padding-left: 8px;
     padding-right: 2px;
     color: rgba(0,0,0,.38);
-    font-size: 14px;
+    font-size: 16px;
   }
   }
   }
@@ -376,7 +376,7 @@
     padding:5px;
     display: flex;
     align-items : center;
-    font-size: 14px;
+    font-size: 16px;
   .title{
     flex:1;
   }
