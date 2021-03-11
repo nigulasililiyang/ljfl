@@ -2,7 +2,7 @@
   <div>
     <el-row type="flex" justify="space-between" align="center">
       <div>
-        <p>当前地图范围：{{ currentArea }}（{{ level }}）</p>
+        <p style="font-size:18px">当前地图范围：{{ currentArea }}（{{ level }}）</p>
         <p v-if="checked2">更新时间：{{ recordTimeFormate }}</p>
       </div>
       <div v-if="level != 'country'">
@@ -22,7 +22,7 @@
       </div>
     </el-row>
     <el-row v-if="level != 'country'">
-      <el-button v-if="level != 'country'" @click="backToParent()" type="text" size="medium"
+      <el-button v-if="level != 'country'" @click="backToParent()" type="text" size="medium" style="font-size:16px"
         >返回上一层</el-button
       >
     </el-row>

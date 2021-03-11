@@ -488,10 +488,10 @@ export default {
         this.realtimeData = [];
         if (response.code == 200) {
           this.questions = response.questions;
-          let recoveryGarbage = this.findQuestionByTag("recovery_recovered");
+          let recoveryGarbage = this.findQuestionByTag("ke_hui_shou_la_ji_chu_li_neng_li");
           if (recoveryGarbage) {
             let recovery = {
-              title: "可回收垃圾",
+              title: "可回收垃圾处理能力",
               value: this.getQuotaValue(recoveryGarbage),
               icon: "recyclable-garbage.png",
               unit:
@@ -503,11 +503,11 @@ export default {
           }
 
           let kitchenGarbage = this.findQuestionByTag(
-            "real_kitchen_waste_deal"
+            "kitchen_waste_ability"
           );
           if (kitchenGarbage) {
             let kitchen = {
-              title: "厨余垃圾",
+              title: "厨余垃圾处理能力",
               value: this.getQuotaValue(kitchenGarbage),
               icon: "kitchen-garbage.png",
               unit:
@@ -519,11 +519,11 @@ export default {
           }
 
           let harmfulGarbage = this.findQuestionByTag(
-            "real_harmful_waste_deal"
+            "harmful_waste_ability"
           );
           if (harmfulGarbage) {
             let harmful = {
-              title: "有害垃圾",
+              title: "有害垃圾处理能力",
               value: this.getQuotaValue(harmfulGarbage),
               icon: "harmful-garbage.png",
               unit:
