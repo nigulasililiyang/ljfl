@@ -111,7 +111,7 @@ export default {
           },
           splitLine: {
             lineStyle: {
-              color: ['#3589e4', '#3589e4','#3589e4','rgba(0, 0, 0, 0)'],
+              color: ['#3589e4', '#3589e4','#3589e4','#3589e4'],
             },
           },
           indicator: indicator,
