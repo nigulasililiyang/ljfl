@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row type="flex" justify="space-between" align="center">
-      <div style="padding-left:20px;">
+      <div>
         <p>当前地图范围：{{ currentArea }}（{{ level }}）</p>
         <p v-if="checked2">更新时间：{{ recordTimeFormate }}</p>
       </div>
