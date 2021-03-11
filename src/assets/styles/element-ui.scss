@@ -386,3 +386,9 @@ body {
 .el-link.is-underline:hover:after{
   border-color: #00e5ff;
 }
+.el-checkbox.is-bordered.el-checkbox--medium{
+  margin-right: 0px;
+  .el-checkbox__label{
+    font-size: 18px;
+  }
+}
